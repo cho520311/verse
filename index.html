@@ -3,144 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>古韻詩詞標註工具 - A4 PDF版</title>
+    <title>古韻詩詞標註工具 - 瀛社二六同系統</title>
     <style>
         :root {
             --paper-bg: #fdf5e6; 
             --ink-black: #2c3e50;
             --classic-red: #a93226;
+            --classic-blue: #2e59a7;
             --soft-gold: #d4af37;
         }
-
-        /* 網頁顯示樣式 */
         body {
             background-color: var(--paper-bg);
             background-image: linear-gradient(rgba(253, 245, 230, 0.7), rgba(253, 245, 230, 0.7)), 
                               url('https://images.unsplash.com/photo-1571168128527-36e655610ec1?q=80&w=2000&auto=format&fit=crop'); 
-            background-size: cover;
-            background-attachment: fixed;
+            background-size: cover; background-attachment: fixed;
             font-family: "Kaiti TC", "KaiTi", "標楷體", serif;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            padding: 20px;
+            margin: 0; display: flex; justify-content: center; padding: 20px;
         }
-
         .container {
-            max-width: 800px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95); 
-            padding: 40px;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            position: relative;
+            max-width: 850px; width: 100%; background: rgba(255, 255, 255, 0.95); 
+            padding: 40px; border: 2px solid #ddd; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative;
         }
-
-        .header-area { text-align: center; margin-bottom: 30px; }
+        .header-area { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
         h1 { color: var(--classic-red); font-size: 38px; margin: 0; letter-spacing: 8px; }
-        .instructor { color: var(--ink-black); font-size: 22px; font-weight: bold; margin: 10px 0; }
-        .contact-info { font-size: 16px; color: #666; margin-bottom: 20px; }
+        
+        .instructor { color: var(--ink-black); font-size: 24px; font-weight: bold; margin: 15px 0 5px 0; }
+        .subtitle { color: #444; font-size: 19px; margin: 5px 0; font-weight: bold; display: block; letter-spacing: 2px; }
+        
+        .contact-info { font-size: 16px; color: #666; margin-top: 15px; }
+        .contact-info a { color: var(--classic-red); text-decoration: none; border-bottom: 1px solid var(--classic-red); }
+        
+        .input-wrapper { position: relative; width: 100%; margin-top: 20px; }
+        textarea { width: 100%; height: 120px; padding: 15px; font-size: 20px; border-radius: 4px; box-sizing: border-box; font-family: inherit; border: 1px solid #ccc; background: white; }
+        
+        .refresh-btn { position: absolute; top: 10px; right: 10px; padding: 5px 12px; background: #f8f9fa; border: 1px solid #ccc; cursor: pointer; z-index: 5; font-family: sans-serif; border-radius: 4px; }
 
-        textarea {
-            width: 100%;
-            height: 120px;
-            background: #fff;
-            border: 1px solid #ccc;
-            padding: 15px;
-            font-size: 20px;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-family: inherit;
-        }
+        .btn-group { display: flex; gap: 12px; justify-content: center; margin: 25px 0; flex-wrap: wrap; }
+        button.main-btn, .btn-link { padding: 10px 20px; border: 2px solid var(--classic-red); background: white; color: var(--classic-red); cursor: pointer; font-size: 18px; font-weight: bold; border-radius: 8px; text-decoration: none; display: inline-block; transition: 0.2s; }
+        button.main-btn:hover, .btn-link:hover { background: var(--classic-red); color: white; }
 
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin: 25px 0;
-            flex-wrap: wrap;
-        }
-
-        button, .btn-link {
-            padding: 12px 24px;
-            border: 2px solid var(--classic-red);
-            background: white;
-            color: var(--classic-red);
-            cursor: pointer;
-            font-size: 18px; 
-            font-weight: bold;
-            transition: 0.3s;
-            border-radius: 6px;
-            text-decoration: none;
-            font-family: inherit;
-        }
-
-        button:hover, .btn-link:hover { background: var(--classic-red); color: white; }
-
-        /* 詩詞輸出樣式：確保注音在正上方 */
-        #output {
-            line-height: 2.8; 
-            font-size: 32px;
-            color: var(--ink-black);
-            min-height: 300px;
-            padding: 40px 20px;
-            border-top: 2px double var(--soft-gold);
-            text-align: center;
-            word-wrap: break-word;
-        }
-
-        ruby {
-            ruby-position: over; /* 強制在上方 */
-            margin: 0 0.15em;
-            display: inline-flex;
-            flex-direction: column-reverse;
-            vertical-align: bottom;
-            align-items: center;
+        /* 核心輸出樣式優化 */
+        #output { 
+            line-height: 2.8; /* 稍微縮小行高讓整體感更強 */
+            font-size: 36px; 
+            color: var(--ink-black); 
+            min-height: 200px; 
+            padding: 40px 20px; 
+            border-top: 2px double var(--soft-gold); 
+            text-align: center; 
         }
         
-        rt {
-            font-size: 16px;
-            line-height: 1.2;
-            color: var(--classic-red);
-            font-family: "Arial", sans-serif;
-            font-weight: bold;
-            display: block;
-            text-align: center;
-            margin-bottom: 2px;
+        ruby { 
+            display: inline-flex; 
+            flex-direction: column-reverse; 
+            vertical-align: bottom; 
+            align-items: center; 
+            margin: 0 0.15em;
+        }
+        
+        /* 縮短注音與漢字的距離 */
+        rt { 
+            font-size: 16px; 
+            line-height: 1.0; 
+            font-family: Arial, sans-serif; 
+            font-weight: bold; 
+            display: block; 
+            margin-bottom: 2px; /* 從 8px 縮短至 2px，讓距離更近 */
         }
 
-        /* PDF / 列印 A4 專用樣式 */
+        /* 平仄顏色互換：平聲藍、仄聲紅 */
+        rt.ping { color: var(--classic-blue); } /* 1, 5 平聲 */
+        rt.ze { color: var(--classic-red); }    /* 2, 3, 4, 6, 7, 8 仄聲 */
+
         @media print {
-            @page { size: A4; margin: 2cm; }
-            body { background: white; background-image: none; padding: 0; }
-            .container { 
-                box-shadow: none; border: none; width: 100%; max-width: none; 
-                padding: 0; background: white;
-            }
-            .container::before, textarea, .btn-group, .contact-info { display: none !important; }
-            h1 { font-size: 28pt; }
-            .instructor { font-size: 18pt; }
-            #output { border-top: 1px solid #000; padding-top: 30pt; }
-            ruby { margin: 0 0.2em; }
-            rt { font-size: 11pt; color: black; } /* 列印時讀音建議黑色較清晰 */
+            .input-wrapper, .btn-group, .refresh-btn { display: none; }
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; border: none; width: 100%; max-width: none; }
         }
     </style>
 </head>
 <body>
-
 <div class="container">
     <div class="header-area">
         <h1>古韻詩詞標註</h1>
         <div class="instructor">瀛社 林正三老師 吳秀真老師 指導</div>
-        <div class="contact-info">交流聯絡：cho.yi.hsiang@gmail.com</div>
+        <div class="subtitle">依《音韻闡微》清 · 李光地</div>
+        <div class="subtitle">二六同方式拼音</div>
+        <div class="contact-info">交流聯絡：<a href="mailto:cho.yi.hsiang@gmail.com">cho.yi.hsiang@gmail.com</a></div>
     </div>
 
-    <textarea id="poemInput" placeholder="在此輸入詩內容..."></textarea>
+    <div class="input-wrapper">
+        <button class="refresh-btn" onclick="refreshAll()">✕ 刷新清空</button>
+        <textarea id="poemInput" placeholder="請在此輸入詩句..."></textarea>
+    </div>
 
     <div class="btn-group">
-        <button onclick="process()">開始轉換</button>
-        <button onclick="window.print()">產生 PDF / 列印</button>
+        <button class="main-btn" onclick="process()">開始轉換</button>
+        <button class="main-btn" onclick="window.print()">產生 PDF / 列印</button>
         <a href="https://tpps.org.tw/home.jsp?lang=tw" target="_blank" class="btn-link">臺灣瀛社詩學會</a>
         <a href="https://forms.gle/jBxt4HzwPNPDowfm7" target="_blank" class="btn-link" style="border-color:#b8860b; color:#8b4513;">🖋️ 詩友留言板</a>
     </div>
@@ -149,8 +108,7 @@
 </div>
 
 <script>
-    // 字典數據
-    const dict = {
+  const dict = {
   "文字": "台羅\n數字版",
   "公": "kong1",
   "飲": "im3",
@@ -19827,28 +19785,32 @@
   "鴥": "ut8"
 };
 
+    function refreshAll() { 
+        document.getElementById('poemInput').value = ""; 
+        document.getElementById('output').innerHTML = ""; 
+    }
+
     function process() {
         const input = document.getElementById('poemInput').value;
         const outputDiv = document.getElementById('output');
-        
-        if (!input.trim()) {
-            outputDiv.innerHTML = "<span style='color:#999; font-size:20px;'>請輸入內容後點擊開始轉換...</span>";
-            return;
-        }
-
         let resultHTML = "";
+
         for (let char of input) {
-            if (dict[char]) {
-                resultHTML += `<ruby>${char}<rt>${dict[char]}</rt></ruby>`;
-            } else if (char === '\n') {
-                resultHTML += "<br>";
-            } else {
-                resultHTML += `<span>${char}</span>`;
+            if (dict[char]) { 
+                const pinyin = dict[char];
+                const tone = pinyin.slice(-1);
+                
+                // 平仄辨色邏輯：1, 5 為平（藍色），其餘為仄（紅色）
+                const toneClass = (tone === '1' || tone === '5') ? 'ping' : 'ze';
+                
+                resultHTML += `<ruby>${char}<rt class="${toneClass}">${pinyin}</rt></ruby>`; 
             }
+            else if (char === '\n') { resultHTML += "<br>"; }
+            else if (char === ' ' || char === '　') { resultHTML += "<span>&emsp;</span>"; }
+            else { resultHTML += `<span>${char}</span>`; }
         }
         outputDiv.innerHTML = resultHTML;
     }
 </script>
-
 </body>
 </html>
