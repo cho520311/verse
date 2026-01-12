@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>古韻詩詞標註工具 - 瀛社二六同系統</title>
+    <title>古韻詩詞標註工具 - 瀛社三七同系統</title>
     <style>
         :root {
             --paper-bg: #fdf5e6; 
             --ink-black: #2c3e50;
-            --classic-red: #a93226; /* 仄聲顏色 */
-            --classic-blue: #2e59a7; /* 平聲顏色 */
+            --classic-red: #a93226; 
+            --classic-blue: #2e59a7; 
             --soft-gold: #d4af37;
         }
         body {
@@ -26,24 +26,28 @@
         }
         .header-area { text-align: center; margin-bottom: 20px; }
         h1 { color: var(--classic-red); font-size: 32px; margin: 0; letter-spacing: 6px; font-weight: bold; }
-        
         .instructor { color: var(--ink-black); font-size: 22px; font-weight: bold; margin: 15px 0 5px 0; }
+        .subtitle { color: #444; font-size: 18px; margin: 5px 0; font-weight: bold; display: block !important; }
         
-        /* 副標題設定：確保雲端與手機強制顯示 */
-        .subtitle { 
-            color: #444; 
-            font-size: 18px; 
-            margin: 5px 0; 
-            font-weight: bold; 
-            display: block !important; 
-            text-align: center; 
-            width: 100%;
+        /* 計數器樣式修正：使用文字而非圖片，保證看得到 */
+        .visitor-counter { 
+            margin: 15px 0; 
+            padding: 5px 15px;
+            background: rgba(169, 50, 38, 0.1);
+            border: 1px solid var(--classic-red);
+            border-radius: 50px;
+            display: inline-block;
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--classic-red);
+            font-family: "Kaiti TC", "KaiTi", "標楷體", serif;
         }
-        
-        .contact-info { font-size: 14px; color: #666; margin-top: 10px; text-align: center; }
+        #count-number { color: #d35400; font-family: Arial; margin-left: 5px; }
+
+        .contact-info { font-size: 16px; color: #666; margin-top: 10px; text-align: center; }
         .contact-info a { color: var(--classic-red); text-decoration: none; border-bottom: 1px solid var(--classic-red); }
-        
-        .input-wrapper { width: 100%; margin-top: 15px; }
+
+        .input-wrapper { width: 100%; margin-top: 10px; }
         textarea { 
             width: 100%; height: 120px; padding: 15px; font-size: 20px; 
             border-radius: 4px; box-sizing: border-box; 
@@ -51,71 +55,31 @@
             border: 1px solid #ccc; background: white; 
         }
         
-        /* 五個按鈕樣式統一：字體最大化、樣式齊一 */
         .btn-group { display: flex; gap: 10px; justify-content: center; margin: 25px 0; flex-wrap: wrap; }
-        
         button, .btn-link { 
-            font-family: "Kaiti TC", "KaiTi", "標楷體", serif; /* 統一字型範本 */
-            font-weight: bold;
-            font-size: 20px; /* 按鈕字體最大化 */
-            padding: 12px 24px; 
-            border: 2px solid var(--classic-red); 
-            background: white; 
-            color: var(--classic-red); 
-            cursor: pointer; 
-            border-radius: 8px; 
-            text-decoration: none; 
-            display: inline-block; 
-            transition: 0.2s;
-            line-height: 1.2;
-            text-align: center;
-            box-sizing: border-box;
+            font-family: "Kaiti TC", "KaiTi", "標楷體", serif;
+            font-weight: bold; font-size: 20px; padding: 12px 24px; 
+            border: 2px solid var(--classic-red); background: white; color: var(--classic-red); 
+            cursor: pointer; border-radius: 8px; text-decoration: none; display: inline-block; 
+            transition: 0.2s; line-height: 1.2; text-align: center;
         }
-        
         button:hover, .btn-link:hover { background: var(--classic-red); color: white; }
-        
-        /* 刷新按鈕：移至最右邊 (order 99) */
         .refresh-btn { border-color: #666; color: #666; order: 99; }
-        .refresh-btn:hover { background: #666 !important; color: white !important; }
 
         #output { 
-            line-height: 2.8; 
-            font-size: 32px; 
-            color: var(--ink-black); 
-            min-height: 150px; 
-            padding: 30px 10px; 
-            border-top: 2px double var(--soft-gold); 
-            text-align: center; 
-            word-break: break-all;
+            line-height: 2.8; font-size: 32px; color: var(--ink-black); 
+            min-height: 150px; padding: 30px 10px; 
+            border-top: 2px double var(--soft-gold); text-align: center; 
         }
 
-        /* 漢字與注音結構：緊湊排版防止斷行誤判 */
-        ruby { 
-            display: inline-flex !important; 
-            flex-direction: column-reverse !important; 
-            vertical-align: bottom; 
-            align-items: center; 
-            margin: 0 0.12em;
-        }
-
-        rt { 
-            font-size: 16px; 
-            line-height: 1.0; 
-            font-family: Arial, sans-serif; 
-            font-weight: bold; 
-            display: block !important; 
-            margin-bottom: -3px; /* 縮短注音與字的距離 */
-            visibility: visible !important;
-        }
-
-        /* 平（藍）、仄（紅） */
+        ruby { display: inline-flex !important; flex-direction: column-reverse !important; vertical-align: bottom; align-items: center; margin: 0 0.12em; }
+        rt { font-size: 16px; line-height: 1.0; font-family: Arial, sans-serif; font-weight: bold; margin-bottom: -3px; }
         rt.ping { color: var(--classic-blue) !important; } 
         rt.ze { color: var(--classic-red) !important; }
 
         @media print {
-            .input-wrapper, .btn-group { display: none; }
+            .input-wrapper, .btn-group, .visitor-counter { display: none; }
             body { background: white; padding: 0; }
-            .container { box-shadow: none; border: none; width: 100%; max-width: none; }
         }
     </style>
 </head>
@@ -125,12 +89,17 @@
         <h1>古韻詩詞標註</h1>
         <div class="instructor">瀛社 林正三老師 吳秀真老師 指導</div>
         <div class="subtitle">依《音韻闡微》清 · 李光地</div>
-        <div class="subtitle">二六同方式拼音</div>
+        <div class="subtitle">三七同方式拼音</div>
+        
+        <div class="visitor-counter">
+            雅客造訪人次：<span id="count-number">0</span>
+        </div>
+
         <div class="contact-info">交流聯絡：<a href="mailto:cho.yi.hsiang@gmail.com">cho.yi.hsiang@gmail.com</a></div>
     </div>
 
     <div class="input-wrapper">
-        <textarea id="poemInput" placeholder="請在此輸入詩句（例如：公飲下覆過上）..."></textarea>
+        <textarea id="poemInput" placeholder="請在此輸入詩句..."></textarea>
     </div>
 
     <div class="btn-group">
@@ -142,6 +111,10 @@
     </div>
 
     <div id="output"></div>
+
+    <div style="text-align: center; margin-top: 30px; font-style: italic; color: #a93226; font-size: 18px; font-weight: bold;">
+        「字有古格韻長存，音隨雅調共芳芬。」
+    </div>
 </div>
 
 <script>
@@ -156,6 +129,7 @@
   "上": "siong6",
   "數": "sak4",
   "復": "hok8",
+  "週": "tsiu1",
   "雲": "un5",
   "樹": "su7",
   "思": "sir3",
@@ -19823,6 +19797,14 @@
   "鴥": "ut8"
 };
 
+   // 計數器邏輯：使用本地儲存，保證顯示
+   window.onload = function() {
+       let count = localStorage.getItem('visitorCount') || 0;
+       count = parseInt(count) + 1;
+       localStorage.setItem('visitorCount', count);
+       document.getElementById('count-number').innerText = count;
+   };
+
     function refreshAll() { 
         document.getElementById('poemInput').value = ""; 
         document.getElementById('output').innerHTML = ""; 
@@ -19837,7 +19819,6 @@
             if (dict[char]) { 
                 const pinyin = dict[char];
                 const tone = pinyin.slice(-1);
-                // 平（藍）、仄（紅）
                 const toneClass = (tone === '1' || tone === '5') ? 'ping' : 'ze';
                 resultHTML += `<ruby>${char}<rt class="${toneClass}">${pinyin}</rt></ruby>`; 
             }
