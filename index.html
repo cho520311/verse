@@ -1,216 +1,162 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
-    <base target="_top">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>古韻詩詞標註 - 介面升級版</title>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>古韻詩詞標註工具 - 瀛社三七同系統</title>
     <style>
         :root {
-            --classic-red: #a93226;
-            --classic-blue: #2e59a7;
-            --main-bg: #d7d3c7;
+            --paper-bg: #fdf5e6; 
+            --ink-black: #2c3e50;
+            --classic-red: #a93226; 
+            --classic-blue: #2e59a7; 
+            --soft-gold: #d4af37;
         }
-        body { 
-            font-family: -apple-system, "Noto Sans TC", "標楷體", sans-serif; 
-            background-color: var(--main-bg); 
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            padding: 20px 15px;
-            box-sizing: border-box;
+        body {
+            background-color: var(--paper-bg);
+            background-image: linear-gradient(rgba(253, 245, 230, 0.7), rgba(253, 245, 230, 0.7)), 
+                              url('https://images.unsplash.com/photo-1571168128527-36e655610ec1?q=80&w=2000&auto=format&fit=crop'); 
+            background-size: cover; background-attachment: fixed;
+            font-family: "Kaiti TC", "KaiTi", "標楷體", serif;
+            margin: 0; display: flex; justify-content: center; padding: 10px;
         }
-
-        .main { 
-            width: 100%; 
-            max-width: 450px; 
-            background: white; 
-            padding: 30px 20px; 
-            border-radius: 25px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            text-align: center;
-            box-sizing: border-box;
+        .container {
+            max-width: 850px; width: 100%; background: rgba(255, 255, 255, 0.95); 
+            padding: 20px; border: 2px solid #ddd; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
-
-        h2 { margin: 0 0 10px 0; color: #333; font-size: 26px; }
-        .sub { font-size: 15px; color: #666; font-weight: bold; margin-bottom: 25px; line-height: 1.5; }
+        .header-area { text-align: center; margin-bottom: 20px; }
+        h1 { color: var(--classic-red); font-size: 32px; margin: 0; letter-spacing: 6px; font-weight: bold; }
+        .instructor { color: var(--ink-black); font-size: 22px; font-weight: bold; margin: 15px 0 5px 0; }
+        .subtitle { color: #444; font-size: 18px; margin: 5px 0; font-weight: bold; display: block; }
         
-        /* 改為多行輸入，方便輸入整首詩 */
+        .status-info { color: #666; font-size: 14px; margin-bottom: 10px; }
+        
         textarea { 
-            width: 100%; 
-            height: 110px;
-            padding: 15px; 
-            font-size: 20px; 
-            text-align: center; 
-            border: 2px solid #eee; 
-            border-radius: 12px; 
-            outline: none;
-            transition: border 0.3s;
-            margin-bottom: 5px;
-            font-family: inherit;
-            resize: none;
-            box-sizing: border-box;
+            width: 100%; height: 120px; padding: 15px; font-size: 20px; 
+            border-radius: 4px; box-sizing: border-box; 
+            font-family: "Kaiti TC", "KaiTi", "標楷體", serif; 
+            border: 1px solid #ccc; background: white; 
         }
-        textarea:focus { border-color: #64b5f6; }
         
-        /* 按鈕群組 */
-        .box { display: flex; gap: 10px; margin: 25px 0; width: 100%; }
-        
-        button { 
-            flex: 1;
-            padding: 12px 5px; 
-            font-size: 18px; 
-            font-weight: bold; 
-            color: white; 
-            border: none; 
-            border-radius: 10px; 
-            cursor: pointer;
-            transition: transform 0.1s, opacity 0.2s;
+        .btn-group { display: flex; gap: 10px; justify-content: center; margin: 25px 0; flex-wrap: wrap; }
+        button, .btn-link { 
+            font-family: "Kaiti TC", "KaiTi", "標楷體", serif;
+            font-weight: bold; font-size: 20px; padding: 12px 24px; 
+            border: 2px solid var(--classic-red); background: white; color: var(--classic-red); 
+            cursor: pointer; border-radius: 8px; text-decoration: none; display: inline-block; 
+            transition: 0.2s;
         }
-        button:active { transform: scale(0.95); opacity: 0.8; }
-        button:disabled { background: #bbb; cursor: wait; }
-        
-        .btn-query { background: #64b5f6; }
-        .btn-feedback { background: #4db6ac; } 
-        .btn-reset { background: #bbb; }
-        
-        /* 結果卡片樣式 - 參考一字多音查詢的配色 */
-        .card { text-align: center; padding: 25px 15px; border-radius: 12px; margin-top: 15px; display: none; }
-        .yin { background: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb; }
-        
-        .title { font-weight: bold; font-size: 16px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px; margin-bottom: 15px; }
-        .content { font-size: 28px; line-height: 3.2; font-weight: 500; word-break: break-all; }
-        
-        /* 標音標籤核心樣式 */
-        ruby { display: inline-flex; flex-direction: column-reverse; vertical-align: bottom; align-items: center; margin: 0 0.1em; }
-        rt { font-size: 14px; line-height: 1.0; font-family: Arial, sans-serif; font-weight: bold; margin-bottom: 3px; }
-        rt.ping { color: var(--classic-blue); } /* 平聲：藍色 */
-        rt.ze { color: var(--classic-red); }    /* 仄聲：紅色 */
-        
-        #loading { margin-top: 15px; color: #999; font-style: italic; font-size: 14px; }
-        
-        .footer { 
-            margin-top: 35px; 
-            padding-top: 15px; 
-            border-top: 1px solid #eee; 
-            font-size: 17px; 
-            font-weight: bold; 
-            color: #444;
-            letter-spacing: 1px;
+        button:hover, .btn-link:hover { background: var(--classic-red); color: white; }
+        button:disabled { border-color: #ccc; color: #ccc; cursor: not-allowed; }
+
+        #output { 
+            line-height: 3.5; font-size: 32px; color: var(--ink-black); 
+            min-height: 150px; padding: 30px 10px; 
+            border-top: 2px double var(--soft-gold); text-align: center; 
+        }
+
+        ruby { display: inline-flex; flex-direction: column-reverse; vertical-align: bottom; align-items: center; margin: 0 0.15em; }
+        rt { font-size: 16px; line-height: 1.2; font-family: Arial, sans-serif; font-weight: bold; margin-bottom: 2px; }
+        rt.ping { color: var(--classic-blue); } 
+        rt.ze { color: var(--classic-red); }
+
+        @media print {
+            .input-wrapper, .btn-group, .status-info { display: none; }
+            body { background: white; padding: 0; }
         }
     </style>
 </head>
 <body>
-    <div class="main">
-        <h2>古韻詩詞標註</h2>
-        <div class="sub">三七同系統拼音<br>瀛社 林正三 / 吳秀真 老師指導</div>
-        
-        <textarea id="ipt" placeholder="填入詩句..."></textarea>
-        
-        <div class="box">
-            <button id="queryBtn" class="btn-query" onclick="go()" disabled>載入中...</button>
-            <button class="btn-feedback" onclick="openFeedback()">留言</button>
-            <button class="btn-reset" onclick="clean()">刷新</button>
-        </div>
-
-        <div id="loading">正在連線雲端資料庫...</div>
-        
-        <div id="cardResult" class="card yin">
-            <div class="title">標註結果 (藍平紅仄)</div>
-            <div id="resContent" class="content"></div>
-        </div>
-
-        <div class="footer">
-            上取聲母定清濁，下取韻母定四聲
-        </div>
+<div class="container">
+    <div class="header-area">
+        <h1>古韻詩詞標註</h1>
+        <div class="instructor">瀛社 林正三老師 吳秀真老師 指導</div>
+        <div class="subtitle">依《音韻闡微》三七同方式拼音</div>
+        <div id="loadStatus" class="status-info">正在連線至雲端字典...</div>
     </div>
 
-    <script>
-        // 您的試算表 ID
-        const SPREADSHEET_ID = '1A260Bg4rABNI7x26MPjFyThIoh4RkMF4E8CRZeUKd68';
-        let dataMap = new Map();
+    <div class="input-wrapper">
+        <textarea id="poemInput" placeholder="請在此輸入詩句..."></textarea>
+    </div>
 
-        // 1. 初始化 Google 載入器
-        google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(initData);
+    <div class="btn-group">
+        <button id="convertBtn" onclick="process()" disabled>同步資料中...</button>
+        <button onclick="window.print()">列印/PDF</button>
+        <button onclick="location.reload()">重新讀取字典</button>
+    </div>
 
-        function initData() {
-            // 使用 Visualization API 撈取資料，格式最穩定
-            const query = new google.visualization.Query(
-                `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json`
-            );
-            query.send(handleQueryResponse);
-        }
+    <div id="output"></div>
 
-        function handleQueryResponse(response) {
-            const statusEl = document.getElementById('loading');
-            const btn = document.getElementById('queryBtn');
+    <div style="text-align: center; margin-top: 30px; font-style: italic; color: #a93226; font-size: 18px; font-weight: bold;">
+        「上取聲母定清濁，下取韻母定四聲。」
+    </div>
+</div>
 
-            if (response.isError()) {
-                statusEl.innerText = "❌ 資料撈取失敗，請確認試算表共用設定。";
-                return;
-            }
+<script>
+    // 您的試算表 ID
+    const sheetId = '1A260Bg4rABNI7x26MPjFyThIoh4RkMF4E8CRZeUKd68';
+    // 讀取 CSV 格式的網址
+    const sheetUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
 
-            const data = response.getDataTable();
-            const rowCount = data.getNumberOfRows();
+    let cloudDict = {};
 
-            // 將試算表資料塞入 Map
-            for (let i = 0; i < rowCount; i++) {
-                const char = data.getValue(i, 0);   // 第一欄：字
-                const pinyin = data.getValue(i, 1); // 第二欄：音
-                if (char) {
-                    dataMap.set(char.toString().trim(), pinyin ? pinyin.toString().trim() : "");
-                }
-            }
-
-            statusEl.innerText = `✅ 字典已就緒（共 ${dataMap.size} 字）。`;
-            btn.innerText = "標註";
-            btn.disabled = false;
-        }
-
-        // 2. 核心標註邏輯
-        function go() {
-            const input = document.getElementById('ipt').value;
-            const resContent = document.getElementById('resContent');
-            const card = document.getElementById('cardResult');
+    // 頁面加載後自動去撈資料
+    async function fetchCloudData() {
+        try {
+            const response = await fetch(sheetUrl);
+            const data = await response.text();
             
-            if (!input.trim()) return;
-
-            let resultHTML = "";
-            for (let char of input) {
-                if (dataMap.has(char)) {
-                    const pinyin = dataMap.get(char);
-                    // 判斷平仄 (數字 1,2,5,6 為平)
-                    const toneMatch = pinyin.match(/\d$/);
-                    const tone = toneMatch ? toneMatch[0] : "";
-                    const isPing = ["1", "2", "5", "6"].includes(tone);
-                    const toneClass = isPing ? "ping" : "ze";
-
-                    resultHTML += `<ruby>${char}<rt class="${toneClass}">${pinyin}</rt></ruby>`;
-                } else if (char === "\n") {
-                    resultHTML += "<br>";
-                } else {
-                    resultHTML += `<span>${char}</span>`;
+            // 解析 CSV 格式 (處理簡單引號與逗號)
+            const rows = data.split('\n');
+            rows.forEach(row => {
+                // 去掉 CSV 的雙引號並分割
+                const columns = row.split(',').map(col => col.replace(/^"(.*)"$/, '$1'));
+                if (columns.length >= 2) {
+                    const char = columns[0].trim();
+                    const pinyin = columns[1].trim();
+                    cloudDict[char] = pinyin;
                 }
+            });
+
+            document.getElementById('loadStatus').innerText = `雲端字典同步成功！已讀取 ${Object.keys(cloudDict).length} 個漢字。`;
+            document.getElementById('convertBtn').innerText = "開始轉換";
+            document.getElementById('convertBtn').disabled = false;
+        } catch (error) {
+            console.error(error);
+            document.getElementById('loadStatus').innerText = "連線失敗，請確認試算表已開啟共用。";
+        }
+    }
+
+    function process() {
+        const input = document.getElementById('poemInput').value;
+        const outputDiv = document.getElementById('output');
+        outputDiv.innerHTML = '';
+
+        let resultHTML = "";
+        for (let char of input) {
+            if (cloudDict[char]) {
+                const pinyin = cloudDict[char];
+                // 抓取拼音結尾的數字決定平仄 (1,2,5,6 平; 3,4,7,8 仄)
+                const toneMatch = pinyin.match(/\d$/);
+                const tone = toneMatch ? toneMatch[0] : "1";
+                
+                let toneClass = "ze";
+                if (["1", "2", "5", "6"].includes(tone)) {
+                    toneClass = "ping";
+                }
+
+                resultHTML += `<ruby>${char}<rt class="${toneClass}">${pinyin}</rt></ruby>`;
+            } else if (char === "\n") {
+                resultHTML += "<br>";
+            } else {
+                resultHTML += `<span>${char}</span>`;
             }
-            
-            resContent.innerHTML = resultHTML;
-            card.style.display = 'block';
         }
+        outputDiv.innerHTML = resultHTML;
+    }
 
-        function clean() {
-            document.getElementById('ipt').value = '';
-            document.getElementById('cardResult').style.display = 'none';
-            document.getElementById('ipt').focus();
-        }
-
-        function openFeedback() {
-            // 您指定的 Google 表單連結
-            window.open('https://docs.google.com/forms/d/1X02C8qDp2ilKXYtem51nUzKWPH1D0p8OyEAWntmFpgE/viewform', '_blank');
-        }
-    </script>
+    // 初始化讀取
+    fetchCloudData();
+</script>
 </body>
 </html>
