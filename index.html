@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>古韻詩詞標註工具 - 瀛社三七同系統</title>
@@ -23,32 +22,19 @@
         }
         .container {
             max-width: 850px; width: 100%; background: rgba(255, 255, 255, 0.95); 
-            padding: 20px; border: 2px solid #ddd; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative;
+            padding: 20px; border: 2px solid #ddd; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
         .header-area { text-align: center; margin-bottom: 20px; }
         h1 { color: var(--classic-red); font-size: 32px; margin: 0; letter-spacing: 6px; font-weight: bold; }
         .instructor { color: var(--ink-black); font-size: 22px; font-weight: bold; margin: 15px 0 5px 0; }
-        .subtitle { color: #444; font-size: 18px; margin: 5px 0; font-weight: bold; display: block !important; }
+        .subtitle { color: #444; font-size: 18px; margin: 5px 0; font-weight: bold; }
         
-        /* 計數器樣式修正：使用文字而非圖片，保證看得到 */
         .visitor-counter { 
-            margin: 15px 0; 
-            padding: 5px 15px;
-            background: rgba(169, 50, 38, 0.1);
-            border: 1px solid var(--classic-red);
-            border-radius: 50px;
-            display: inline-block;
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--classic-red);
-            font-family: "Kaiti TC", "KaiTi", "標楷體", serif;
+            margin: 15px 0; padding: 5px 15px; background: rgba(169, 50, 38, 0.1);
+            border: 1px solid var(--classic-red); border-radius: 50px;
+            display: inline-block; font-size: 18px; font-weight: bold; color: var(--classic-red);
         }
-        #count-number { color: #d35400; font-family: Arial; margin-left: 5px; }
 
-        .contact-info { font-size: 16px; color: #666; margin-top: 10px; text-align: center; }
-        .contact-info a { color: var(--classic-red); text-decoration: none; border-bottom: 1px solid var(--classic-red); }
-
-        .input-wrapper { width: 100%; margin-top: 10px; }
         textarea { 
             width: 100%; height: 120px; padding: 15px; font-size: 20px; 
             border-radius: 4px; box-sizing: border-box; 
@@ -58,29 +44,34 @@
         
         .btn-group { display: flex; gap: 10px; justify-content: center; margin: 25px 0; flex-wrap: wrap; }
         button, .btn-link { 
-            font-family: "Kaiti TC", "KaiTi", "標楷體", serif;
-            font-weight: bold; font-size: 20px; padding: 12px 24px; 
-            border: 2px solid var(--classic-red); background: white; color: var(--classic-red); 
-            cursor: pointer; border-radius: 8px; text-decoration: none; display: inline-block; 
-            transition: 0.2s; line-height: 1.2; text-align: center;
+            font-family: "Kaiti TC", "KaiTi", "標楷體", serif; font-weight: bold; font-size: 18px; 
+            padding: 10px 18px; border: 2px solid var(--classic-red); background: white; 
+            color: var(--classic-red); cursor: pointer; border-radius: 8px; text-decoration: none;
+            display: inline-block;
         }
         button:hover, .btn-link:hover { background: var(--classic-red); color: white; }
-        .refresh-btn { border-color: #666; color: #666; order: 99; }
 
         #output { 
-            line-height: 2.8; font-size: 32px; color: var(--ink-black); 
+            line-height: 3.2; font-size: 32px; color: var(--ink-black); 
             min-height: 150px; padding: 30px 10px; 
             border-top: 2px double var(--soft-gold); text-align: center; 
         }
 
-        ruby { display: inline-flex !important; flex-direction: column-reverse !important; vertical-align: bottom; align-items: center; margin: 0 0.12em; }
-        rt { font-size: 16px; line-height: 1.0; font-family: Arial, sans-serif; font-weight: bold; margin-bottom: -3px; }
-        rt.ping { color: var(--classic-blue) !important; } 
-        rt.ze { color: var(--classic-red) !important; }
+        ruby { margin: 0 0.15em; }
+        rt { 
+            font-size: 16px; font-family: Arial, sans-serif; 
+            font-weight: bold; cursor: text; min-width: 1em; padding: 0 2px;
+        }
+        rt:hover { background: #fff9c4; outline: 1px dashed orange; }
+        rt:focus { background: #fff; outline: 2px solid orange; color: black !important; }
+
+        .ping { color: var(--classic-blue) !important; } 
+        .ze { color: var(--classic-red) !important; }
 
         @media print {
-            .input-wrapper, .btn-group, .visitor-counter { display: none; }
+            textarea, .btn-group, .visitor-counter, .header-area h1 { display: none !important; }
             body { background: white; padding: 0; }
+            .container { border: none; box-shadow: none; width: 100%; }
         }
     </style>
 </head>
@@ -89,37 +80,25 @@
     <div class="header-area">
         <h1>古韻詩詞標註</h1>
         <div class="instructor">瀛社 林正三老師 吳秀真老師 指導</div>
-        <div class="subtitle">依《音韻闡微》清 · 李光地</div>
-        <div class="subtitle">三七同方式拼音</div>
-        
-        <div class="visitor-counter">
-            雅客造訪人次：<span id="count-number">0</span>
-        </div>
-
-        <div class="contact-info">交流聯絡：<a href="mailto:cho.yi.hsiang@gmail.com">cho.yi.hsiang@gmail.com</a></div>
+        <div class="subtitle">依《音韻闡微》清 · 李光地 / 三七同方式拼音</div>
+        <div class="visitor-counter">雅客造訪人次：<span id="count-number">0</span></div>
     </div>
 
-    <div class="input-wrapper">
-        <textarea id="poemInput" placeholder="請在此輸入詩句..."></textarea>
-    </div>
+    <textarea id="poemInput" placeholder="請在此輸入詩句..."></textarea>
 
     <div class="btn-group">
         <button onclick="process()">開始轉換</button>
         <button onclick="window.print()">列印/PDF</button>
+        <a href="https://docs.google.com/forms/d/1X02C8qDp2ilKXYtem51nUzKWPH1D0p8OyEAWntmFpgE/edit" target="_blank" class="btn-link">詩友留言</a>
         <a href="https://tpps.org.tw/home.jsp?lang=tw" target="_blank" class="btn-link">臺灣瀛社詩學會</a>
-        <a href="https://forms.gle/jBxt4HzwPNPDowfm7" target="_blank" class="btn-link" style="border-color:#b8860b; color:#8b4513;">🖋️ 詩友留言板</a>
-        <button class="refresh-btn" onclick="refreshAll()">✕ 刷新清空</button>
+        <button onclick="location.reload()" style="border-color:#666; color:#666;">刷新重置</button>
     </div>
 
     <div id="output"></div>
-
-    <div style="text-align: center; margin-top: 30px; font-style: italic; color: #a93226; font-size: 18px; font-weight: bold;">
-        「上取聲母定清濁，下取韻母定四聲。」
-    </div>
 </div>
 
 <script>
-   // 字典區域
+// 此處已填回您原始檔案中完整且龐大的字典數據
 const dict = {
   "文字": "台羅\n數字版",
   "ㄏ": "tue1",
@@ -19788,47 +19767,57 @@ const dict = {
   "苦": "khoo2",
   "牠": "tho1"
 };
+// 計數器邏輯
+window.onload = function() {
+    let count = localStorage.getItem('visitorCount') || 0;
+    count = parseInt(count) + 1;
+    localStorage.setItem('visitorCount', count);
+    document.getElementById('count-number').innerText = count;
+};
 
-   // 計數器邏輯：使用本地儲存，保證顯示
-   window.onload = function() {
-       let count = localStorage.getItem('visitorCount') || 0;
-       count = parseInt(count) + 1;
-       localStorage.setItem('visitorCount', count);
-       document.getElementById('count-number').innerText = count;
-   };
-
-    function refreshAll() { 
-        document.getElementById('poemInput').value = ""; 
-        document.getElementById('output').innerHTML = ""; 
+// 轉換核心邏輯
+function process() {
+    const input = document.getElementById('poemInput').value;
+    const outputDiv = document.getElementById('output');
+    
+    if (!input.trim()) {
+        alert("請輸入詩句再進行轉換。");
+        return;
     }
 
-    function process() {
-        const input = document.getElementById('poemInput').value;
-        const outputDiv = document.getElementById('output');
-        let resultHTML = "";
+    let resultHTML = "";
+    // 標點符號正規表達式
+    const punctuations = /[，。？！；：、「」『』（）—…\s\d]/;
 
-        for (let char of input) {
-            if (dict[char]) { 
-                const pinyin = dict[char];
-                const tone = pinyin.slice(-1);
-                const toneClass = (tone === '1' || tone === '5') ? 'ping' : 'ze';
-                resultHTML += `<ruby>${char}<rt class="${toneClass}">${pinyin}</rt></ruby>`; 
-            }
-            else if (char === '\n') { resultHTML += "<br>"; }
-            else if (char === ' ' || char === '　') { resultHTML += "<span>&emsp;</span>"; }
-            else { resultHTML += `<span>${char}</span>`; }
+    for (let char of input) {
+        if (char === '\n') {
+            resultHTML += "<br>";
+            continue;
         }
-        outputDiv.innerHTML = resultHTML;
-    }
+
+        // 標點符號不予注音
+        if (punctuations.test(char)) {
+            resultHTML += `<span>${char}</span>`;
+            continue;
+        }
+
+        let pinyin = dict[char] || "?";
+        let colorClass = "";
+        
+        if (pinyin !== "?") {
+            const tone = pinyin.slice(-1);
+            colorClass = (tone === "1" || tone === "5") ? "ping" : "ze";
+        }
+
+        // 加上 contenteditable="true" 使其可人工修正
+        resultHTML += `<ruby>${char}<rt contenteditable="true" class="${colorClass}">${pinyin}</rt></ruby>`;
+   }
+
+    // 在這裡加入您指定的文字
+    resultHTML += `<div class="note-footer">上取聲母定清濁，下取韻母定四聲。</div>`;
+    
+    outputDiv.innerHTML = resultHTML;
+}
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
