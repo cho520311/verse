@@ -28,20 +28,17 @@
         h1 { color: var(--classic-red); font-size: 32px; margin: 0; letter-spacing: 6px; font-weight: bold; }
         .instructor { color: var(--ink-black); font-size: 22px; font-weight: bold; margin: 15px 0 5px 0; }
         .subtitle { color: #444; font-size: 18px; margin: 5px 0; font-weight: bold; }
-        
         .visitor-counter { 
             margin: 15px 0; padding: 5px 15px; background: rgba(169, 50, 38, 0.1);
             border: 1px solid var(--classic-red); border-radius: 50px;
             display: inline-block; font-size: 18px; font-weight: bold; color: var(--classic-red);
         }
-
         textarea { 
             width: 100%; height: 120px; padding: 15px; font-size: 20px; 
             border-radius: 4px; box-sizing: border-box; 
             font-family: "Kaiti TC", "KaiTi", "標楷體", serif; 
             border: 1px solid #ccc; background: white; 
         }
-        
         .btn-group { display: flex; gap: 10px; justify-content: center; margin: 25px 0; flex-wrap: wrap; }
         button, .btn-link { 
             font-family: "Kaiti TC", "KaiTi", "標楷體", serif; font-weight: bold; font-size: 18px; 
@@ -50,13 +47,11 @@
             display: inline-block;
         }
         button:hover, .btn-link:hover { background: var(--classic-red); color: white; }
-
         #output { 
             line-height: 3.2; font-size: 32px; color: var(--ink-black); 
             min-height: 150px; padding: 30px 10px; 
             border-top: 2px double var(--soft-gold); text-align: center; 
         }
-
         ruby { margin: 0 0.15em; }
         rt { 
             font-size: 16px; font-family: Arial, sans-serif; 
@@ -64,10 +59,8 @@
         }
         rt:hover { background: #fff9c4; outline: 1px dashed orange; }
         rt:focus { background: #fff; outline: 2px solid orange; color: black !important; }
-
         .ping { color: var(--classic-blue) !important; } 
         .ze { color: var(--classic-red) !important; }
-
         @media print {
             textarea, .btn-group, .visitor-counter, .header-area h1 { display: none !important; }
             body { background: white; padding: 0; }
@@ -83,9 +76,7 @@
         <div class="subtitle">依《音韻闡微》清 · 李光地 / 三七同方式拼音</div>
         <div class="visitor-counter">雅客造訪人次：<span id="count-number">0</span></div>
     </div>
-
     <textarea id="poemInput" placeholder="請在此輸入詩句..."></textarea>
-
     <div class="btn-group">
         <button onclick="process()">開始轉換</button>
         <button onclick="window.print()">列印/PDF</button>
@@ -93,12 +84,9 @@
         <a href="https://tpps.org.tw/home.jsp?lang=tw" target="_blank" class="btn-link">臺灣瀛社詩學會</a>
         <button onclick="location.reload()" style="border-color:#666; color:#666;">刷新重置</button>
     </div>
-
     <div id="output"></div>
 </div>
-
 <script>
-// 此處已填回您原始檔案中完整且龐大的字典數據
 const dict = {
   "ㄏ": "tue1", "一": "it4", "丨": "kun2", "丶": "tu2", "丿": "phiat4", "乀": "hut4", "乙": "it4", "亅": "kuat8", "𠂆": "e7", 
   "𠄌": "kuat4", "𡿨": "kian2", "丁": "tieng1", "丂": "kho2", "七": "tshit4", "丄": "siong6", "丅": "ha6", "丩": "kiu1", "乂": "gue7", "乃": "nai2", 
@@ -732,7 +720,7 @@ const dict = {
   "教": "kau3", "敝": "pe7", "斛": "hok8", "斜": "sia5", "斬": "tsam2", "旇": "phi1", "旇": "pi7", "旋": "suan5", "旋": "suan7", "旌": "tsieng1", 
   "旍": "tsieng1", "旎": "ni2", "族": "tsok8", "晙": "tsun3", "晙": "sun3", "晚": "buan2", "晛": "hian6", "晛": "nian7", "晜": "kun1", "晝": "tiu3", 
   "晞": "hi1", "晡": "poo1", "晢": "tse3", "晢": "tsiat4", "晣": "tsiat4", "晤": "goo7", "晥": "huan6", "晦": "hue3", "晧": "ho6", "晨": "sin5", 
-  "曹": "tso5", "曼": "muan5", "朖": "long2", "朚": "mong5", "朚": "bong5", "朚": "mirng7", "望": "bong7", "桫": "so1", "桬": "sa1", "桭": "tsin1", 
+  "曹": "tso5", "曼": "muan7", "朖": "long2", "朚": "mong5", "朚": "bong5", "朚": "mirng7", "望": "bong7", "桫": "so1", "桬": "sa1", "桭": "tsin1", 
   "桭": "sin5", "桮": "pue1", "桯": "thieng1", "桯": "hieng5", "桱": "kieng3", "桲": "put8", "桴": "hu1", "桵": "jui5", "桶": "thong2", "桷": "kak4", 
   "桸": "hi1", "桹": "long5", "桻": "hong1", "桼": "tshit4", "桾": "kun1", "梀": "tshok4", "梀": "sok4", "梀": "thiok4", "梁": "liong5", "梂": "kiu5", 
   "梃": "tieng6", "梄": "iu2", "梅": "mue5", "梆": "pang1", "梇": "long7", "梋": "hian1", "梌": "thoo1", "梌": "too5", "梌": "ta5", "梍": "au1", 
@@ -1310,7 +1298,7 @@ const dict = {
   "滵": "mit8", "滶": "go5", "滷": "loo2", "滷": "tshierk4", "滷": "tierk8", "滸": "hoo2", "滹": "hoo1", "滻": "san2", "滽": "iong5", "滾": "kun2", 
   "滿": "muan2", "漁": "gir5", "漂": "phiau1", "漂": "phiau3", "漅": "tsiau2", "漆": "tshit4", "漉": "lok8", "漊": "lu2", "漊": "lio2", "漌": "kin2", 
   "漍": "kirk4", "漏": "lio7", "漓": "li5", "演": "ian2", "漕": "tso5", "漕": "tso7", "漘": "sun5", "漙": "tuan5", "漚": "io1", "漚": "io3", 
-  "漞": "mierk8", "漠": "mok8", "漢": "han3", "漣": "lian5", "漧": "kan1", "漨": "hong5", "漪": "i1", "漫": "muan5", "漫": "muan7", "漬": "tsir7", 
+  "漞": "mierk8", "漠": "mok8", "漢": "han3", "漣": "lian5", "漧": "kan1", "漨": "hong5", "漪": "i1", "漫": "muan7", "漫": "muan7", "漬": "tsir7", 
   "漭": "mong2", "漭": "mong7", "漮": "khong1", "漯": "thap4", "漰": "phirng1", "漱": "sio3", "漱": "siu3", "漲": "tiong3", "漲": "tiong1", "漳": "tsiong1", 
   "漴": "tsang7", "漵": "sir6", "漶": "huan7", "漷": "khok4", "漷": "hirk4", "漸": "tsiam1", "漸": "tsiam6", "漹": "ian5", "漹": "ian3", "漺": "tshong2", 
   "漺": "song2", "漻": "liau5", "漼": "tshue2", "漾": "iong7", "潀": "tsong5", "潀": "tsiong1", "潀": "tsong5", "潎": "phe3", "潎": "phiat4", "澈": "tiat8", 
@@ -1784,7 +1772,7 @@ const dict = {
   "鴟": "tshi1", "鴠": "tan3", "鴢": "iau2", "鴢": "au2", "鴣": "koo1", "鴤": "tsiong1", "鴥": "ut8", "鴦": "iong1", "鴨": "ap4", "鴪": "ut8", 
   "鹷": "lieng5", "麅": "pau5", "麆": "tsoo6", "麆": "tsir7", "麇": "kun1", "麈": "tsu2", "麮": "khir2", "麮": "khir3", "黅": "kim1", "黔": "kim5", 
   "黔": "kiam5", "黕": "tam2", "黖": "hi3", "黗": "thun2", "默": "mirk8", "黺": "hun2", "鼒": "tsir1", "鼒": "tsai5", "鼽": "kiu5", "龍": "liong5", 
-  "龜": "kui1", "龜": "khiu1", "𠁗": "sierk4", "𠆎": "ui5", "𠏭": "tsong7", "𠏮": "tue3", "𠐀": "i5", "𠟻": "tsirk4", "𠠃": "tshiam1", "𠤄": "khiok4", 
+  "龜": "kui1", "龜": "kui1", "𠁗": "sierk4", "𠆎": "ui5", "𠏭": "tsong7", "𠏮": "tue3", "𠐀": "i5", "𠟻": "tsirk4", "𠠃": "tshiam1", "𠤄": "khiok4", 
   "𠤄": "kiok8", "𠮊": "tirk4", "𠿈": "tsau1", "𠿈": "tsiu1", "𠿊": "khierk4", "𠿍": "tian3", "𠿒": "hat4", "𠿓": "sap4", "𠿕": "khiau3", "𠿝": "tshir1", 
   "𠿟": "ak4", "𠿠": "tsip4", "𠿡": "tuat4", "𡑟": "o1", "𡑠": "tshi3", "𡑠": "sierk8", "𡑣": "khut4", "𡢑": "tut4", "𡢕": "hui2", "𡢖": "khai2", 
   "𡢖": "khe3", "𡢖": "khai3", "𡫀": "kierk4", "𡭊": "tue3", "𡰖": "te1", "𡰖": "te5", "𡳠": "tshir1", "𡼿": "khut4", "𡽃": "tho2", "𡽆": "tsi3", 
@@ -1917,7 +1905,7 @@ const dict = {
   "轃": "tsen1", "轃": "tsian1", "轄": "khai3", "轄": "hat8", "轅": "uan5", "轅": "ian7", "遽": "kir7", "遾": "se7", "避": "pi7", "邀": "iau1", 
   "邁": "mai7", "邂": "hai7", "還": "huan5", "還": "huan5", "邅": "tian1", "邅": "tian6", "邅": "tian7", "鄸": "mong7", "鄹": "tsiu1", "鄹": "tsu6", 
   "醙": "siu2", "醜": "tshiu2", "醝": "tso5", "醞": "un2", "醞": "un3", "醟": "hieng3", "醟": "ieng7", "醠": "ong2", "醠": "ong3", "醡": "tsa3", 
-  "醢": "hai2", "錘": "tui5", "錘": "tui7", "鍇": "kai1", "鍇": "khai2", "鍉": "te1", "鍊": "lian7", "鍋": "ko1", "鍍": "too5", "鍍": "too7", 
+  "醢": "hai2", "錘": "tui5", "錘": "tui7", "鍇": "kai1", "鍇": "khai2", "鍉": "te1", "鍊": "lian7", "鍋": "ko1", "鍍": "too7", "鍍": "too7", 
   "鍎": "tut8", "鍏": "ui5", "鍏": "ui2", "鍑": "hiu3", "鍑": "hok4", "鍒": "jiu5", "鍔": "gok8", "鍖": "thim2", "鍚": "iong5", "鍛": "tuan3", 
   "鍜": "ha5", "鍝": "gu5", "鍠": "hong5", "鍡": "ue2", "鍤": "tshap4", "鍤": "thiap4", "鍥": "khiat4", "鍥": "kiat4", "鍦": "si1", "鍦": "sia5", 
   "鍦": "si3", "鍧": "hong1", "鍨": "kui5", "鍪": "mio5", "鍫": "tshiau1", "鍭": "hio5", "鍭": "hio7", "鍮": "thio1", "鍯": "tshong1", "鍰": "huan5", 
@@ -1995,7 +1983,7 @@ const dict = {
   "䱔": "iu5", "䱕": "mio5", "䱖": "liu5", "䳔": "kiok4", "䳕": "hiu5", "䳖": "niap8", "䳚": "khai3", "䳚": "khan3", "䳚": "khat4", "䳤": "piat4", 
   "䴛": "siau1", "䴦": "gin5", "䴦": "gin5", "䴷": "hun5", "䴷": "huan6", "䵋": "ui2", "䵋": "kue3", "䵤": "hian6", "䵦": "sia6", "䵧": "tsai3", 
   "䵽": "tshap4", "䶄": "pieng5", "䶔": "ti5", "儭": "tshin3", "儭": "tshen3", "儯": "tirng5", "儱": "long2", "儱": "liong7", "叢": "tsong5", "嚖": "hui3", 
-  "嚗": "pak4", "嚗": "phak4", "嚘": "iu1", "嚙": "giat8", "嚚": "gin5", "嚛": "hok4", "嚛": "hok4", "嚜": "mi7", "嚝": "hong1", "嚞": "tiat4", 
+  "嚗": "phak4", "嚗": "phak4", "嚘": "iu1", "嚙": "giat8", "嚚": "gin5", "嚛": "hok4", "嚛": "hok4", "嚜": "mi7", "嚝": "hong1", "嚞": "tiat4", 
   "嚮": "hiong2", "嚮": "hiong3", "壘": "lui2", "壘": "lui2", "壘": "lui7", "壘": "lut8", "壙": "khong3", "奰": "pi7", "嬻": "tok8", "嬼": "liu2", 
   "嬼": "liu7", "屩": "kiok4", "巀": "tsat8", "巀": "tsiat8", "巁": "le7", "巂": "hue5", "幭": "miat8", "幮": "tu5", "彍": "kok4", "彍": "hok4", 
   "彝": "i5", "懕": "iam1", "懖": "kuat4", "懘": "tshi2", "懘": "tshe3", "懟": "tui7", "懣": "mun7", "懣": "mun2", "懣": "muan2", "懪": "pak8", 
@@ -2125,7 +2113,7 @@ const dict = {
   "櫜": "ko1", "櫝": "tok8", "櫞": "ian5", "櫟": "iok8", "櫟": "lierk8", "櫥": "tu5", "櫧": "tsir1", "櫫": "tir1", "歠": "tshuat4", "殰": "tok8", 
   "瀖": "hok4", "瀗": "hian3", "瀘": "loo5", "瀙": "tsen1", "瀙": "tshin3", "瀙": "tshen3", "瀚": "han7", "瀛": "ieng5", "瀜": "iong5", "瀝": "lierk8", 
   "瀞": "tsieng7", "瀟": "siau1", "瀡": "sui3", "瀢": "ui2", "瀢": "tue6", "瀣": "hai7", "瀣": "hai7", "瀤": "huai5", "瀥": "hak4", "瀧": "long5", 
-  "瀧": "sang1", "瀧": "lang5", "瀨": "lai7", "爆": "pau3", "爆": "pak4", "爆": "pok4", "爇": "juat8", "爈": "lir5", "爌": "khong2", "爌": "hong2", 
+  "瀧": "sang1", "瀧": "lang5", "瀨": "lai7", "爆": "pau3", "爆": "pok4", "爆": "pok4", "爇": "juat8", "爈": "lir5", "爌": "khong2", "爌": "hong2", 
   "爌": "khong3", "爍": "siok4", "牘": "tok8", "犡": "le7", "犡": "lai7", "犢": "tok8", "犣": "liap8", "犤": "pi5", "犤": "pai5", "犥": "phiau1", 
   "犥": "phiau2", "犦": "pok4", "犦": "pak8", "獸": "siu3", "獹": "loo5", "獺": "that4", "獺": "that4", "璷": "lir5", "璽": "sir2", "瓃": "lui5", 
   "瓃": "lue5", "瓃": "lui7", "瓄": "tok8", "瓅": "lierk8", "瓈": "le5", "瓊": "kieng5", "瓣": "pan7", "甖": "irng1", "疆": "kiong1", "疇": "tiu5", 
@@ -2532,60 +2520,41 @@ const dict = {
   "𨯝": "tue6", "𨶩": "hap8", "𨶪": "kiau2", "𨷭": "tian5", "𨾎": "kui5", "𩁚": "nan5", "𩃬": "im1", "𩆊": "buan7", "𩌥": "hak4", "𩒣": "tsim6", 
   "𩓏": "khieng2", "𩕧": "sun3", "𩹟": "nai7", "𩻼": "te7", "𪀐": "pip8", "𪀐": "kiap8", "𪁁": "kiok8", "苦": "khoo2", "牠": "tho1", "嗯": "hm3", 
   "岪": "hut4", "嵂": "lut8", "砆": "hu1", "梬": "ieng2", "浰": "li7", "翱": "go5", "袘": "i5", "𧛖": "i5", "鵔": "tsun3", "鸃": "gi5", 
-  "鵞": "go5", "𡧧": "gi5", "䳘": "go5", "礚": "khap4", "卨": "siat4", "妳": "ni2", "您": "lin2", "們": "mun7"
-};// 計數器邏輯
-window.onload = function() {
+  "鵞": "go5", "𡧧": "gi5", "䳘": "go5", "礚": "khap4", "卨": "siat4", "妳": "ni2", "您": "lin2", "們": "mun7", "陁": "to5", "輛": "liong7", 
+  "嗎": "ma7"
+};window.onload = function() {
     let count = localStorage.getItem('visitorCount') || 0;
-    count = parseInt(count) + 1;
+    count = parseInt(count, 10) + 1;
     localStorage.setItem('visitorCount', count);
     document.getElementById('count-number').innerText = count;
 };
-
-// 轉換核心邏輯
 function process() {
     const input = document.getElementById('poemInput').value;
     const outputDiv = document.getElementById('output');
-    
     if (!input.trim()) {
         alert("請輸入詩句再進行轉換。");
         return;
     }
-
     let resultHTML = "";
-    // 標點符號正規表達式
     const punctuations = /[，。？！；：、「」『』（）—…\s\d]/;
-
     for (let char of input) {
-        if (char === '\n') {
-            resultHTML += "<br>";
-            continue;
-        }
-
-        // 標點符號不予注音
-        if (punctuations.test(char)) {
-            resultHTML += `<span>${char}</span>`;
-            continue;
-        }
-
+        if (char === '\n') { resultHTML += '<br>'; continue; }
+        if (punctuations.test(char)) { resultHTML += `<span>${char}</span>`; continue; }
         let pinyin = dict[char] || "?";
         let colorClass = "";
-        
         if (pinyin !== "?") {
             const tone = pinyin.slice(-1);
             colorClass = (tone === "1" || tone === "5") ? "ping" : "ze";
         }
-
-        // 加上 contenteditable="true" 使其可人工修正
         resultHTML += `<ruby>${char}<rt contenteditable="true" class="${colorClass}">${pinyin}</rt></ruby>`;
-   }
-
-    // 在這裡加入您指定的文字
- resultHTML += `<div class="note-footer" style="color: blue; font-size: 20px;">【上取聲母定清濁，下取韻母定四聲】</div>`;
-    
+    }
+    resultHTML += `
+    <div class="note-footer" style="color: blue; font-size: 20px; margin-top:15px;">
+        【上取聲母定清濁，下取韻母定四聲】<br>
+        聯絡：<a href="mailto:cho.yi.hsiang@gmail.com" style="color:#2e59a7; text-decoration:underline;">cho.yi.hsiang@gmail.com</a>
+    </div>`;
     outputDiv.innerHTML = resultHTML;
 }
-
-
 </script>
 </body>
 </html>
