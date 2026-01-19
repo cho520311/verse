@@ -1,99 +1,140 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>古韻詩詞標註工具 - 瀛社三七同系統</title>
-    <style>
-        :root {
-            --paper-bg: #fdf5e6;
-            --ink-black: #2c3e50;
-            --classic-red: #a93226; 
-            --classic-blue: #2e59a7; 
-            --soft-gold: #d4af37;
-        }
-        body {
-            background-color: var(--paper-bg);
-            background-image: linear-gradient(rgba(253, 245, 230, 0.7), rgba(253, 245, 230, 0.7)), 
-                              url('https://images.unsplash.com/photo-1571168128527-36e655610ec1?q=80&w=2000&auto=format&fit=crop');
-            background-size: cover; background-attachment: fixed;
-            font-family: "Kaiti TC", "KaiTi", "標楷體", serif;
-            margin: 0; display: flex; justify-content: center; padding: 10px;
-        }
-        .container {
-            max-width: 850px;
-            width: 100%; background: rgba(255, 255, 255, 0.95); 
-            padding: 20px; border: 2px solid #ddd; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        .header-area { text-align: center; margin-bottom: 20px; }
-        h1 { color: var(--classic-red); font-size: 32px; margin: 0; letter-spacing: 6px; font-weight: bold; }
-        .instructor { color: var(--ink-black); font-size: 22px; font-weight: bold; margin: 15px 0 5px 0; }
-        .subtitle { color: #444; font-size: 18px; margin: 5px 0; font-weight: bold; }
-        
-        textarea { 
-            width: 100%;
-            height: 120px; padding: 15px; font-size: 20px; 
-            border-radius: 4px; box-sizing: border-box; 
-            font-family: "Kaiti TC", "KaiTi", "標楷體", serif; 
-            border: 1px solid #ccc;
-            background: white; 
-        }
-        .btn-group { display: flex; gap: 10px; justify-content: center; margin: 25px 0; flex-wrap: wrap; }
-        button, .btn-link { 
-            font-family: "Kaiti TC", "KaiTi", "標楷體", serif;
-            font-weight: bold; font-size: 18px; 
-            padding: 10px 18px; border: 2px solid var(--classic-red); background: white; 
-            color: var(--classic-red); cursor: pointer; border-radius: 8px;
-            text-decoration: none;
-            display: inline-block;
-        }
-        button:hover, .btn-link:hover { background: var(--classic-red); color: white; }
-        #output { 
-            line-height: 3.2;
-            font-size: 32px; color: var(--ink-black); 
-            min-height: 150px; padding: 30px 10px; 
-            border-top: 2px double var(--soft-gold); text-align: center;
-        }
-        ruby { margin: 0 0.15em; }
-        rt { 
-            font-size: 16px;
-            font-family: Arial, sans-serif; 
-            font-weight: bold; cursor: text; min-width: 1em; padding: 0 2px;
-        }
-        rt:hover { background: #fff9c4; outline: 1px dashed orange; }
-        rt:focus { background: #fff; outline: 2px solid orange; color: black !important; }
-        .ping { color: var(--classic-blue) !important; } 
-        .ze { color: var(--classic-red) !important; }
-        
-        @media print {
-            textarea, .btn-group, .header-area h1 { display: none !important; }
-            body { background: white; padding: 0; }
-            .container { border: none; box-shadow: none; width: 100%; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古韻詩詞標註工具 - 瀛社三七同系統</title>
+
+<style>
+:root{
+    --paper-bg:#fdf5e6;
+    --ink-black:#2c3e50;
+    --classic-red:#a93226;
+    --classic-blue:#2e59a7;
+    --soft-gold:#d4af37;
+}
+body{
+    background-color:var(--paper-bg);
+    background-image:linear-gradient(rgba(253,245,230,.7),rgba(253,245,230,.7)),
+    url('https://images.unsplash.com/photo-1571168128527-36e655610ec1?q=80&w=2000&auto=format&fit=crop');
+    background-size:cover;
+    background-attachment:fixed;
+    font-family:"Kaiti TC","KaiTi","標楷體",serif;
+    margin:0;
+    display:flex;
+    justify-content:center;
+    padding:10px;
+}
+.container{
+    max-width:850px;
+    width:100%;
+    background:rgba(255,255,255,.95);
+    padding:20px;
+    border:2px solid #ddd;
+    border-radius:4px;
+    box-shadow:0 10px 30px rgba(0,0,0,.1);
+}
+.header-area{text-align:center;margin-bottom:20px;}
+h1{color:var(--classic-red);font-size:32px;margin:0;letter-spacing:6px;}
+.instructor{font-size:22px;font-weight:bold;margin:15px 0 5px;}
+.subtitle{font-size:18px;font-weight:bold;color:#444;}
+
+textarea{
+    width:100%;
+    height:120px;
+    padding:15px;
+    font-size:20px;
+    font-family:"Kaiti TC","KaiTi","標楷體",serif;
+}
+
+.btn-group{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    margin:25px 0;
+    flex-wrap:wrap;
+}
+button,.btn-link{
+    font-family:"Kaiti TC","KaiTi","標楷體",serif;
+    font-size:18px;
+    font-weight:bold;
+    padding:10px 18px;
+    border:2px solid var(--classic-red);
+    background:#fff;
+    color:var(--classic-red);
+    border-radius:8px;
+    cursor:pointer;
+    text-decoration:none;
+}
+button:hover,.btn-link:hover{
+    background:var(--classic-red);
+    color:#fff;
+}
+
+#output{
+    line-height:3.2;
+    font-size:32px;
+    min-height:150px;
+    padding:30px 10px;
+    border-top:2px double var(--soft-gold);
+    text-align:center;
+}
+
+ruby{margin:0 .15em;}
+rt{
+    font-size:16px;
+    font-family:Arial,sans-serif;
+    font-weight:bold;
+}
+.ping{color:var(--classic-blue);}
+.ze{color:var(--classic-red);}
+
+@media print{
+    textarea,.btn-group,.header-area{display:none!important;}
+    body{background:#fff;}
+    .container{border:none;box-shadow:none;padding:0;}
+}
+</style>
 </head>
+
 <body>
 <div class="container">
-    <div class="header-area">
-        <h1>古韻詩詞標註</h1>
-        <div class="instructor">瀛社 林正三老師 吳秀真老師 指導</div>
-        <div class="subtitle">依《音韻闡微》清 · 李光地 / 三七同方式拼音</div>
-    </div>
-    <textarea id="poemInput" placeholder="請在此輸入詩句..."></textarea>
-    <div class="btn-group">
-        <button onclick="process()">開始轉換</button>
-        <button onclick="handlePrint()">列印/PDF</button>
-        <a href="https://docs.google.com/forms/d/1X02C8qDp2ilKXYtem51nUzKWPH1D0p8OyEAWntmFpgE/edit" target="_blank" class="btn-link">詩友留言</a>
-        <a href="https://tpps.org.tw/home.jsp?lang=tw" target="_blank" class="btn-link">臺灣瀛社詩學會</a>
-        <button onclick="location.reload()" style="border-color:#666; color:#666;">刷新重置</button>
-    </div>
-    <div id="output"></div>
+
+<div class="header-area">
+<h1>古韻詩詞標註</h1>
+<div class="instructor">瀛社 林正三老師 吳秀真老師 指導</div>
+<div class="subtitle">依《音韻闡微》清 · 李光地 / 三七同方式拼音</div>
+</div>
+
+<textarea id="poemInput" placeholder="請在此輸入詩句..."></textarea>
+
+<div class="btn-group">
+<button onclick="process()">開始轉換</button>
+<button onclick="handlePrint()">列印 / PDF</button>
+
+<button onclick="copyResult()"
+        style="border-color:var(--classic-blue);color:var(--classic-blue);">
+    複製資料
+</button>
+
+<a href="https://docs.google.com/forms/d/1X02C8qDp2ilKXYtem51nUzKWPH1D0p8OyEAWntmFpgE/edit"
+   target="_blank" class="btn-link">詩友留言</a>
+
+<a href="https://tpps.org.tw/home.jsp?lang=tw"
+   target="_blank" class="btn-link">臺灣瀛社詩學會</a>
+
+<button onclick="location.reload()" style="border-color:#666;color:#666;">
+刷新重置
+</button>
+</div>
+
+<div id="output"></div>
 </div>
 
 <script>
-// 字典資料
+// 字典（示例，可自行擴充）
 const dict = {
- "ㄏ": "tue1", "一": "it4", "丨": "kun2", "丶": "tu2", "丿": "phiat4", "乀": "hut4", "乙": "it4", "亅": "kuat8", "𠂆": "e7", 
+  "ㄏ": "tue1", "一": "it4", "丨": "kun2", "丶": "tu2", "丿": "phiat4", "乀": "hut4", "乙": "it4", "亅": "kuat8", "𠂆": "e7", 
   "𠄌": "kuat4", "𡿨": "kian2", "丁": "tieng1", "丂": "kho2", "七": "tshit4", "丄": "siong6", "丅": "ha6", "丩": "kiu1", "乂": "gue7", "乃": "nai2", 
   "乜": "mia2", "九": "kiu2", "了": "liau2", "二": "ji7", "人": "jin5", "入": "jip8", "八": "pat4", "冖": "mierk8", "冫": "pieng1", "几": "ki1", 
   "凵": "khian2", "刀": "to1", "刁": "tiau1", "力": "lierk8", "勹": "pau1", "匕": "pi2", "匚": "hong1", "匸": "he6", "十": "sip8", "卜": "pok4", 
@@ -2529,60 +2570,85 @@ const dict = {
   "埼": "ki5", "濦": "in2", "䱭": "kirng3", "鰫": "iong5", "澔": "ho6", "躪": "lin7", "蠼": "kiok4", "偨": "tshir1", "藰": "liu2", "琘": "min5", 
   "扦": "tshian1", "貏": "pi6", "崣": "ui2", "嶻": "tsat8", "嶄": "tsam5", "嵷": "tsong1", "閕": "ha1", "隝": "to2"
 };
-function process() {
-    const input = document.getElementById('poemInput').value;
-    const outputDiv = document.getElementById('output');
-    if (!input.trim()) {
-        alert("請輸入詩句再進行轉換。");
+// Unicode 漢字判斷（更完整）
+const han = /\p{Script=Han}/u;
+
+// 轉換（按鈕用）
+function process(){
+    const input=document.getElementById("poemInput").value;
+    const out=document.getElementById("output");
+    if(!input.trim()){
+        alert("請輸入詩句");
         return;
     }
-    
-    let resultHTML = "";
-    // 定義標點符號與特殊字元，不包含中文字
-    const punctuations = /[，。？！；：、「」『』（）—…\s\d]/;
-    // 定義中文字範圍（簡單判定）
-    const hanChar = /[\u4E00-\u9FFF]/;
-
-    for (let char of input) {
-        if (char === '\n') { 
-            resultHTML += '<br>';
-            continue; 
-        }
-        
-        // 判斷是否為中文字，若不是則不標註
-        if (!hanChar.test(char) || punctuations.test(char)) {
-            resultHTML += `<span>${char}</span>`; 
-            continue;
-        }
-
-        let pinyin = dict[char] || "?";
-        let colorClass = "";
-        if (pinyin !== "?") {
-            const tone = pinyin.slice(-1);
-            colorClass = (tone === "1" || tone === "5") ? "ping" : "ze";
-        }
-        resultHTML += `<ruby>${char}<rt contenteditable="true" class="${colorClass}">${pinyin}</rt></ruby>`;
-    }
-    
-    resultHTML += `
-    <div class="note-footer" style="color: blue; font-size: 20px; margin-top:15px;">
-        【上取聲母定清濁，下取韻母定四聲】<br>
-        聯絡：<a href="mailto:cho.yi.hsiang@gmail.com" style="color:#2e59a7; text-decoration:underline;">cho.yi.hsiang@gmail.com</a>
-    </div>`;
-    outputDiv.innerHTML = resultHTML;
+    out.innerHTML = convertToRuby(input);
 }
 
-// 處理列印與檔名設定
-function handlePrint() {
-    const input = document.getElementById('poemInput').value.trim();
-    if (input) {
-        // 取前兩個中文字作為檔名
-        const hanOnly = input.replace(/[^\u4E00-\u9FFF]/g, '');
-        const fileName = hanOnly.substring(0, 2) || "古韻詩詞";
-        document.title = fileName;
+// 轉換（列印用，不跳 alert）
+function convertToRuby(input){
+    let html="";
+    for(let ch of input){
+        if(ch==="\n"){html+="<br>";continue;}
+        if(!han.test(ch)){html+=ch;continue;}
+        let py=dict[ch]||"?";
+        let tone=py.slice(-1);
+        let cls=(tone==="1"||tone==="5")?"ping":"ze";
+        html+=`<ruby>${ch}<rt contenteditable="true" class="${cls}">${py}</rt></ruby>`;
     }
+    html+=`
+    <div style="font-size:20px;color:#2e59a7;margin-top:15px;">
+    【上取聲母定清濁，下取韻母定四聲】<br>
+    聯絡：<a href="mailto:cho.yi.hsiang@gmail.com">cho.yi.hsiang@gmail.com</a>
+    </div>`;
+    return html;
+}
+
+// 列印（檔名取 output 第一行完整詩句）
+function handlePrint(){
+    const out = document.getElementById("output");
+
+    if(!out.innerText.trim()){
+        const input=document.getElementById("poemInput").value;
+        if(input.trim()){
+            out.innerHTML = convertToRuby(input);
+        }
+    }
+
+    const firstLine = out.innerText.split("\n")[0] || "古韻";
+    const title = firstLine.replace(/[^\u4E00-\u9FFF]/g,"") || "古韻";
+
+    document.title = title;  // 存檔檔名
     window.print();
 }
+
+// ===== 複製資料 =====
+function copyResult(){
+    const out=document.getElementById("output");
+    if(!out||out.innerText.trim()===""){
+        alert("目前沒有可複製的內容");
+        return;
+    }
+    const text=out.innerText;
+    if(navigator.clipboard&&window.isSecureContext){
+        navigator.clipboard.writeText(text)
+        .then(()=>alert("已複製到剪貼簿"))
+        .catch(()=>fallbackCopy(text));
+    }else{
+        fallbackCopy(text);
+    }
+}
+function fallbackCopy(text){
+    const ta=document.createElement("textarea");
+    ta.value=text;
+    ta.style.position="fixed";
+    ta.style.left="-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+    alert("已複製到剪貼簿");
+}
 </script>
+
 </body>
 </html>
