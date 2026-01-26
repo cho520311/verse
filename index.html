@@ -61,9 +61,11 @@
         .info-link { color: var(--classic-blue); text-decoration: underline; }
 
         ruby { margin: 0 0.15em; }
-        rt { font-size: 16px; font-family: Arial, sans-serif; font-weight: bold; cursor: text; min-width: 1em; padding: 0 2px; }
+        rt { font-size: 16px; font-family: Arial, sans-serif; font-weight: bold; cursor: text; min-width: 1em; padding: 0 2px; transition: color 0.3s; }
         rt:hover { background: #fff9c4; outline: 1px dashed orange; }
-        rt:focus { background: #fff; outline: 2px solid orange; color: black !important; }
+        rt:focus { background: #fff; outline: 2px solid orange; }
+        
+        /* 平仄顏色定義 */
         .ping { color: var(--classic-blue) !important; } 
         .ze { color: var(--classic-red) !important; }
         
@@ -111,8 +113,9 @@
 </div>
 
 <script>
+// 字典資料
 const dict = {
- "ㄏ": "tue1", "一": "it4", "丨": "kun2", "丶": "tu2", "丿": "phiat4", "乀": "hut4", "乙": "it4", "亅": "kuat8", "𠂆": "e7", 
+"ㄏ": "tue1", "一": "it4", "丨": "kun2", "丶": "tu2", "丿": "phiat4", "乀": "hut4", "乙": "it4", "亅": "kuat8", "𠂆": "e7", 
   "𠄌": "kuat4", "𡿨": "kian2", "丁": "tieng1", "丂": "kho2", "七": "tshit4", "丄": "siong6", "丅": "ha6", "丩": "kiu1", "乂": "gue7", "乃": "nai2", 
   "乜": "mia2", "九": "kiu2", "了": "liau2", "二": "ji7", "人": "jin5", "入": "jip8", "八": "pat4", "冖": "mierk8", "冫": "pieng1", "几": "ki1", 
   "凵": "khian2", "刀": "to1", "刁": "tiau1", "力": "lierk8", "勹": "pau1", "匕": "pi2", "匚": "hong1", "匸": "he6", "十": "sip8", "卜": "pok4", 
@@ -587,7 +590,7 @@ const dict = {
   "涀": "hian7", "涃": "khun3", "涅": "niat8", "涇": "kieng1", "消": "siau1", "涉": "siap8", "涊": "jin2", "涊": "nian2", "涌": "iong2", "涍": "hau1", 
   "涍": "hau3", "涏": "tieng6", "涏": "tian7", "涐": "go5", "涑": "sio1", "涑": "sok4", "涑": "siok4", "涒": "thun1", "涓": "kuan1", "涔": "tsim5", 
   "涕": "the2", "涕": "the3", "涖": "li7", "涖": "le7", "涗": "sue3", "涘": "tsir6", "淯": "iok8", "烄": "kau2", "烄": "ko3", "烈": "liat8", 
-  "烊": "iong5", "烋": "hau1", "烋": "hiu1", "烏": "oo1", "烏": "a1", "烑": "iau5", "烒": "sierk4", "烓": "ue1", "烓": "khieng2", "烔": "tong5", 
+  "烊": "iong5", "烋": "hau1", "烋": "hiu1", "烏": "oo1", "烏": "oo1", "烑": "iau5", "烒": "sierk4", "烓": "ue1", "烓": "khieng2", "烔": "tong5", 
   "烕": "huat4", "烖": "tsai1", "烗": "khai3", "烘": "hong1", "烙": "lok8", "烚": "hap8", "烜": "hui2", "烜": "huan2", "烝": "tsieng1", "烝": "tsieng1", 
   "烟": "ian1", "烠": "hue5", "烤": "kho2", "爹": "tia1", "牂": "tsong1", "牷": "tsuan5", "牸": "tsir7", "特": "tirk8", "狳": "ir5", "狴": "pe1", 
   "狵": "mang5", "狷": "kuan3", "狸": "li5", "狹": "hap8", "狺": "gin5", "狺": "gin5", "狻": "suan1", "狼": "long5", "狽": "pue3", "狾": "tse3", 
@@ -1522,7 +1525,7 @@ const dict = {
   "潭": "tam5", "潭": "tam5", "潮": "tiau5", "潯": "sim5", "潰": "hue7", "潲": "sau3", "潶": "hirk4", "潷": "pit4", "潸": "san1", "潸": "san2", 
   "潺": "tsan5", "潺": "tsian5", "潼": "tong5", "潾": "lin5", "潾": "lan5", "潿": "ui5", "澁": "sip4", "澂": "tieng5", "澄": "tieng5", "澅": "hua7", 
   "澆": "kiau1", "澆": "giau7", "澇": "lo5", "澇": "lo2", "澇": "lo2", "澇": "lo7", "澉": "kam2", "澉": "tham3", "澋": "hieng6", "澌": "sir3", 
-  "澍": "tsu3", "澍": "su7", "澎": "phirng1", "澎": "pirng5", "澐": "un5", "澒": "hong6", "澓": "hok8", "澗": "kan3", "澗": "kan1", "濆": "hun5", 
+  "澍": "tsu3", "澍": "su7", "澎": "phirng1", "澎": "pirng5", "澐": "un5", "澒": "hong6", "澓": "hok8", "澗": "kan3", "澗": "kan3", "濆": "hun5", 
   "濆": "phun1", "熚": "pit4", "熛": "piau1", "熟": "siok8", "熠": "ip8", "熠": "ip8", "熧": "tsiong1", "熨": "ui3", "熨": "ut4", "熪": "i5", 
   "熬": "go5", "熭": "ue7", "熭": "uat8", "熮": "liau5", "熮": "liu2", "熮": "liau7", "熯": "han2", "熯": "jian2", "熯": "han3", "熱": "jiat8", 
   "熲": "kieng2", "牕": "tshang1", "牖": "iu2", "犘": "ma5", "犙": "siu1", "犙": "siu1", "犙": "sam1", "犚": "ui3", "犛": "li5", "犛": "lai5", 
@@ -2554,9 +2557,11 @@ const dict = {
   "嶵": "tsue6", "檌": "tsue6", "飈": "piau1", "呆": "mio2", "礔": "phierk4", "櫹": "siau1", "𩗗": "ku7", "蹍": "tian2", "㩧": "pak8", "髠": "khun1", 
   "蛔": "hue5", "颶": "ku7", "怎": "tsen2", "懂": "tong2", "啦": "lap8", "踩": "luat8", "另": "lieng7", "茼": "tong5", "鋅": "tsir2", "菠": "po5", 
   "蛋": "tan6", "酶": "mue5", "釨": "tsir2", "圩": "u5", "颪": "kua1", "厘": "li5", "觔": "kin1", "瓮": "ong3", "韲": "tse1", "炸": "tse3", 
-  "嚐": "siang5", "划": "hua5", "鯱": "hoo2", "奶": "nai2", "籴": "tierk8", "搬": "puan1"
-};
+  "嚐": "siang5", "划": "hua5", "鯱": "hoo2", "奶": "nai2", "籴": "tierk8", "搬": "puan1", "慤": "khak4", "廻": "hue5", "蹤": "tsiong1", "琉": "liu5", 
+  "鶲": "ong1", "烏": "oo1"
+}; 
 
+// 核心轉換函數
 function process() {
     const input = document.getElementById('poemInput').value;
     const outputDiv = document.getElementById('output');
@@ -2568,6 +2573,7 @@ function process() {
     let resultHTML = "";
     const punctuations = /[，。？！；：、「」『』（）—…\s\d]/;
     const hanChar = /[\u4E00-\u9FFF]/;
+
     for (let char of input) {
         if (char === '\n') { 
             resultHTML += '<br>';
@@ -2578,12 +2584,10 @@ function process() {
             continue;
         }
         let pinyin = dict[char] || "?";
-        let colorClass = "";
-        if (pinyin !== "?") {
-            const tone = pinyin.slice(-1);
-            colorClass = (tone === "1" || tone === "5") ? "ping" : "ze";
-        }
-        resultHTML += `<ruby>${char}<rt contenteditable="true" class="${colorClass}">${pinyin}</rt></ruby>`;
+        let colorClass = updateColorByTone(pinyin); // 初始判斷顏色
+        
+        // 加上 oninput 事件，讓使用者編輯時即時觸發顏色更新
+        resultHTML += `<ruby>${char}<rt contenteditable="true" class="${colorClass}" oninput="refreshToneColor(this)">${pinyin}</rt></ruby>`;
     }
     
     resultHTML += `
@@ -2594,14 +2598,30 @@ function process() {
     outputDiv.innerHTML = resultHTML;
 }
 
+// 根據拼音最後一位數字判斷顏色的輔助函數
+function updateColorByTone(pinyin) {
+    if (pinyin === "?") return "";
+    const tone = pinyin.trim().slice(-1);
+    return (tone === "1" || tone === "5") ? "ping" : "ze";
+}
+
+// 當 rt 內容被修改時執行的函數
+function refreshToneColor(element) {
+    const text = element.innerText.trim();
+    const newColor = updateColorByTone(text);
+    
+    // 清除舊顏色，加入新顏色
+    element.classList.remove("ping", "ze");
+    if (newColor) {
+        element.classList.add(newColor);
+    }
+}
+
 function handlePrint() {
     const input = document.getElementById('poemInput').value.trim();
     if (input) {
-        // 擷取第一行文字
         const firstLine = input.split('\n')[0];
-        // 過濾掉非中文字元（保留全部中文字）
         const hanOnly = firstLine.replace(/[^\u4E00-\u9FFF]/g, '');
-        // 將處理後的第一行中文字設為網頁標題（即存檔檔名）
         const fileName = hanOnly || "古韻詩詞";
         document.title = fileName;
     }
@@ -2610,4 +2630,3 @@ function handlePrint() {
 </script>
 </body>
 </html>
-
