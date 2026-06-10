@@ -2,42 +2,45 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>古韻詩詞標註工具 - 瀛社三七同系統</title>
+    <title>古韻詩詞標註工具</title>
     <style>
-        :root { --paper-bg: #fdf5e6; --ink-black: #2c3e50; --classic-red: #a93226; --classic-blue: #2e59a7; --soft-gold: #d4af37; }
-        body { background-color: var(--paper-bg); font-family: "Kaiti TC", "KaiTi", "標楷體", serif; padding: 20px; }
-        .container { max-width: 850px; margin: auto; background: #fff; padding: 30px; border: 1px solid #ccc; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        h1 { color: var(--classic-red); text-align: center; }
-        textarea { width: 100%; height: 100px; margin: 20px 0; font-size: 18px; padding: 10px; box-sizing: border-box; }
-        #output { line-height: 4; font-size: 32px; text-align: center; padding: 20px; }
-        ruby { display: inline-flex; flex-direction: column-reverse; align-items: center; margin: 0 0.15em; }
-        rt { font-size: 16px; font-weight: bold; cursor: text; padding: 0 2px; }
-        .editable-char { border-bottom: 1px dotted #aaa; cursor: text; outline: none; }
-        .ping { color: var(--classic-blue) !important; } 
-        .ze { color: var(--classic-red) !important; }
+        body { font-family: "標楷體", serif; background: #fdf5e6; padding: 20px; }
+        .container { max-width: 850px; margin: auto; background: white; padding: 30px; border: 1px solid #ccc; }
+        
+        /* 標註輸出區 */
+        #output { line-height: 4; font-size: 32px; text-align: center; margin-top: 20px; border-top: 2px solid #d4af37; padding-top: 20px; min-height: 100px; }
+        
+        /* Ruby 樣式：確保垂直對齊 */
+        ruby { display: inline-flex; flex-direction: column-reverse; align-items: center; margin: 0 5px; }
+        rt { font-size: 16px; font-weight: bold; cursor: text; }
+        
+        /* 可編輯樣式 */
+        .editable-char { border-bottom: 1px dotted #aaa; outline: none; }
+        .ping { color: #2e59a7 !important; } /* 平聲藍 */
+        .ze { color: #a93226 !important; }   /* 仄聲紅 */
+        
         .info-section { margin-top: 50px; padding: 20px; border: 1px solid #d4af37; background: #fffdf9; line-height: 1.8; }
-        .info-section h3 { color: var(--classic-red); }
     </style>
 </head>
 <body>
+
 <div class="container">
     <h1>古韻詩詞標註</h1>
-    <textarea id="poemInput" placeholder="請在此輸入詩句..."></textarea>
-    <button onclick="process()">開始轉換</button>
+    <textarea id="poemInput" style="width:100%; height:80px; font-size:18px;" placeholder="請輸入詩句..."></textarea>
+    
+    <div style="margin:20px 0;">
+        <button onclick="process()">開始轉換</button>
+        <button onclick="window.print()">列印/PDF</button>
+    </div>
 
     <div id="output"></div>
 
     <div id="infoBox" class="info-section">
         <h3>謝謝您的蒞臨指教</h3>
-        <p>有關音標中有 <strong>ir</strong> 或 <strong>er</strong> 的出現，茲解釋如下：</p>
         <ul>
-            <li><strong>(1) 區分中古音格局：</strong>研究顯示，在閩南方言的「白讀音」中，ir 和 er 的存在能反映出比《切韻》更古老的音韻對立。</li>
-            <li><strong>(2) 反映「支、之、脂、微」之別：</strong>在中古音的分類中，「支、之、脂、微」這幾個韻類在現代優勢腔中大多已經合併（都發 i 音），但在保留老泉州話特徵的層次中，透過 er（[ə]）或 ir（[ɨ]）的加入，可以區分出哪些字屬於「支」韻，哪些字屬於「之、脂」韻。</li>
-            <li><strong>(3) 層次辨識：</strong>在學術研究上，這代表該字屬於較古老的歷史層次（如六朝層），用來區別那些在現代腔調中已經聽不出差別的古代韻類。</li>
+            <li>【上取聲母定清濁，下取韻母定四聲】</li>
+            <li>交流聯絡：cho.yi.hsiang@gmail.com</li>
         </ul>
-        <hr>
-        <p><strong>交流聯絡信箱:</strong> <a href="mailto:cho.yi.hsiang@gmail.com">cho.yi.hsiang@gmail.com</a></p>
     </div>
 </div>
 
@@ -2488,37 +2491,45 @@ const dict = {
   "鶲": "ong1", "烏": "oo1", "槓": "kang1", "冲": "tshiong1", "啓": "ke2", "畓": "nam2", "睏": "khun3", "嘛": "ma5", "硅": "hirk4"
 
 };
+
+// 2. 轉換函數
 function process() {
     const input = document.getElementById('poemInput').value;
     const outputDiv = document.getElementById('output');
-    outputDiv.innerHTML = "";
+    outputDiv.innerHTML = ""; // 只清空 output 區，不影響下方說明區
+
     for (let char of input) {
         if (char === '\n') { outputDiv.appendChild(document.createElement('br')); continue; }
-        if (/[，。？！\s]/.test(char)) { outputDiv.appendChild(document.createTextNode(char)); continue; }
         
         let ruby = document.createElement('ruby');
+        
+        // 漢字
         let charSpan = document.createElement('span');
         charSpan.className = "editable-char";
         charSpan.contentEditable = true;
         charSpan.innerText = char;
         
+        // 音標
         let rt = document.createElement('rt');
         rt.contentEditable = true;
         rt.innerText = dict[char] || "?";
         
+        // 漢字修改連動
         charSpan.oninput = function() {
             this.nextElementSibling.innerText = dict[this.innerText.trim()] || "?";
-            refreshColor(this.nextElementSibling);
+            updateColor(this.nextElementSibling);
         };
-        rt.oninput = function() { refreshColor(this); };
+        rt.oninput = function() { updateColor(this); };
         
-        refreshColor(rt);
+        updateColor(rt);
         ruby.appendChild(rt);
         ruby.appendChild(charSpan);
         outputDiv.appendChild(ruby);
     }
 }
-function refreshColor(rt) {
+
+// 3. 顏色更新邏輯
+function updateColor(rt) {
     let tone = rt.innerText.trim().slice(-1);
     rt.className = (tone === "1" || tone === "5") ? "ping" : "ze";
 }
