@@ -1,3 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>古韻詩詞標註工具 - 瀛社三七同系統</title>
+    <style>
+        :root {
+            --paper-bg: #fdf5e6;
+            --ink-black: #2c3e50;
+            --classic-red: #a93226; 
+            --classic-blue: #2e59a7; 
+            --soft-gold: #d4af37;
+        }
+        body {
+            background-color: var(--paper-bg);
+            background-image: linear-gradient(rgba(253, 245, 230, 0.7), rgba(253, 245, 230, 0.7)), 
+                              url('https://images.unsplash.com/photo-1571168128527-36e655610ec1?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover; background-attachment: fixed;
+            font-family: "Kaiti TC", "KaiTi", "標楷體", serif;
+            margin: 0; display: flex; justify-content: center; padding: 10px;
+        }
+        .container {
+            max-width: 850px;
+            width: 100%; background: rgba(255, 255, 255, 0.95); 
+            padding: 20px; border: 2px solid #ddd; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .header-area { text-align: center; margin-bottom: 20px; }
+        h1 { color: var(--classic-red); font-size: 32px; margin: 0; letter-spacing: 6px; font-weight: bold; }
+        .instructor { color: var(--ink-black); font-size: 22px; font-weight: bold; margin: 15px 0 5px 0; }
+        .subtitle { color: #444; font-size: 18px; margin: 5px 0; font-weight: bold; }
+        
+        textarea { 
+            width: 100%; height: 120px; padding: 15px; font-size: 20px; 
+            border-radius: 4px; box-sizing: border-box; 
+            font-family: "Kaiti TC", "KaiTi", "標楷體", serif; 
+            border: 1px solid #ccc; background: white; 
+        }
+        .btn-group { display: flex; gap: 10px; justify-content: center; margin: 25px 0; flex-wrap: wrap; }
+        button, .btn-link { 
+            font-family: "Kaiti TC", "KaiTi", "標楷體", serif;
+            font-weight: bold; font-size: 18px; 
+            padding: 10px 18px; border: 2px solid var(--classic-red); background: white; 
+            color: var(--classic-red); cursor: pointer; border-radius: 8px;
+            text-decoration: none; display: inline-block;
+        }
+        button:hover, .btn-link:hover { background: var(--classic-red); color: white; }
+        
+        #output { 
+            line-height: 4; font-size: 32px; color: var(--ink-black); 
+            min-height: 150px; padding: 30px 10px; 
+            border-top: 2px double var(--soft-gold); text-align: center;
+        }
+        
+        /* 核心排版：確保 ruby 結構正確且對齊 */
+        ruby { display: inline-flex; flex-direction: column-reverse; align-items: center; margin: 0 0.15em; }
+        rt { font-size: 16px; font-weight: bold; cursor: text; padding: 0 2px; }
+        .editable-char { border-bottom: 1px dotted #aaa; cursor: text; outline: none; }
+        
+        /* 平仄顏色定義 */
+        .ping { color: var(--classic-blue) !important; } 
+        .ze { color: var(--classic-red) !important; }
+        
+        .info-section { margin-top: 30px; padding: 20px; border: 1px double var(--soft-gold); background: #fffdf9; font-size: 18px; line-height: 1.6; color: #333; }
+        .info-section h3 { color: var(--classic-red); margin-top: 0; }
+        .info-link { color: var(--classic-blue); text-decoration: underline; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header-area">
+        <h1>古韻詩詞標註</h1>
+        <div class="instructor">瀛社 林正三老師 吳秀真老師 指導</div>
+        <div class="subtitle">依《音韻闡微》清 · 李光地 / 三七同方式拼音</div>
+    </div>
+    <textarea id="poemInput" placeholder="請在此輸入詩句..."></textarea>
+    
+    <div class="btn-group">
+        <button onclick="process()">開始轉換</button>
+        <button onclick="window.print()">列印/PDF</button>
+        <a href="#infoBox" class="btn-link">說明聯絡</a>
+        <a href="https://tpps.org.tw/home.jsp?lang=tw" target="_blank" class="btn-link">臺灣瀛社詩學會</a>
+        <button onclick="location.reload()" style="border-color:#666; color:#666;">刷新重置</button>
+    </div>
+
+    <div id="output"></div>
+
+    <div id="infoBox" class="info-section">
+        <h3>謝謝您的蒞臨指教</h3>
+        <ul>
+            <li>(1) 區分中古音格局，反映閩南白讀音之古韻。</li>
+            <li>(2) 反映「支、之、脂、微」之別。</li>
+            <li>(3) 層次辨識。</li>
+        </ul>
+        <p><strong>交流聯絡信箱:</strong> <a href="mailto:cho.yi.hsiang@gmail.com" class="info-link">cho.yi.hsiang@gmail.com</a></p>
+    </div>
+</div>
+
 <script>
 // 字典資料
 const dict = {
@@ -2445,17 +2543,13 @@ const dict = {
   "鶲": "ong1", "烏": "oo1", "槓": "kang1", "冲": "tshiong1", "啓": "ke2", "畓": "nam2", "睏": "khun3", "嘛": "ma5", "硅": "hirk4"
 
 };
-
 function process() {
     const input = document.getElementById('poemInput').value;
     const outputDiv = document.getElementById('output');
-    outputDiv.innerHTML = ""; // 清空舊內容
+    outputDiv.innerHTML = "";
 
     for (let char of input) {
-        // 處理換行
         if (char === '\n') { outputDiv.appendChild(document.createElement('br')); continue; }
-        
-        // 處理標點符號，不參與標註
         if (/[，。？！；：、「」『』（）—…\s\d]/.test(char)) {
             let span = document.createElement('span');
             span.innerText = char;
@@ -2463,17 +2557,19 @@ function process() {
             continue;
         }
 
-        // 建立 Ruby 結構 (漢字與音標)
         let ruby = document.createElement('ruby');
         
-        // 漢字部分：設定為可編輯，綁定自動更新事件
         let charSpan = document.createElement('span');
         charSpan.className = "editable-char";
         charSpan.contentEditable = true;
         charSpan.innerText = char;
-        charSpan.oninput = function() { updateLinkedPinyin(this); };
+        // 關鍵：修改漢字連動
+        charSpan.oninput = function() {
+            let rt = this.nextElementSibling;
+            rt.innerText = dict[this.innerText.trim()] || "?";
+            refreshColor(rt);
+        };
         
-        // 音標部分：設定為可編輯，綁定顏色重判事件
         let rt = document.createElement('rt');
         rt.contentEditable = true;
         rt.innerText = dict[char] || "?";
@@ -2486,29 +2582,13 @@ function process() {
     }
 }
 
-// 核心功能：修改漢字時，自動聯動更新音標與顏色
-function updateLinkedPinyin(span) {
-    let newChar = span.innerText.trim();
-    let rt = span.nextElementSibling;
-    rt.innerText = dict[newChar] || "?";
-    refreshColor(rt);
-}
-
-// 核心功能：根據拼音尾碼判斷平仄顏色
 function refreshColor(rt) {
     let pinyin = rt.innerText.trim();
     let tone = pinyin.slice(-1);
     rt.classList.remove("ping", "ze");
-    // 根據您的系統：1 或 5 為平聲 (藍色)，其餘為仄聲 (紅色)
-    if (tone === "1" || tone === "5") {
-        rt.classList.add("ping");
-    } else if (pinyin !== "?") {
-        rt.classList.add("ze");
-    }
-}
-
-// 列印函數
-function handlePrint() {
-    window.print();
+    if (tone === "1" || tone === "5") rt.classList.add("ping");
+    else if (pinyin !== "?") rt.classList.add("ze");
 }
 </script>
+</body>
+</html>
