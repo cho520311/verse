@@ -10,28 +10,25 @@
             --ink-black: #2c3e50;
             --classic-red: #a93226; 
             --classic-blue: #2e59a7; 
-            --soft-gold: #d4af37;
         }
-        body { background-color: var(--paper-bg); font-family: "Kaiti TC", "KaiTi", "標楷體", serif; margin: 0; display: flex; justify-content: center; padding: 20px; }
-        .container { max-width: 850px; width: 100%; background: rgba(255, 255, 255, 0.95); padding: 20px; border: 2px solid #ddd; border-radius: 4px; }
-        textarea { width: 100%; height: 100px; font-size: 20px; margin-bottom: 20px; }
-        .btn-group { display: flex; gap: 10px; margin-bottom: 20px; }
-        #output { line-height: 4; font-size: 32px; border-top: 2px solid #ccc; padding-top: 20px; }
-        ruby { margin: 0 0.1em; }
+        body { background-color: var(--paper-bg); font-family: "Kaiti TC", "KaiTi", "標楷體", serif; padding: 20px; display: flex; justify-content: center; }
+        .container { max-width: 850px; width: 100%; background: rgba(255, 255, 255, 0.95); padding: 20px; border: 2px solid #ddd; }
+        textarea { width: 100%; height: 100px; font-size: 20px; margin-bottom: 10px; }
+        #output { line-height: 4; font-size: 32px; border-top: 2px solid #ccc; padding-top: 20px; text-align: center; }
+        
+        /* 核心樣式：確保 ruby 結構正確顯示 */
+        ruby { margin: 0 0.15em; display: inline-flex; flex-direction: column-reverse; align-items: center; }
         rt { font-size: 18px; font-weight: bold; cursor: text; padding: 0 2px; }
-        .editable-char { border-bottom: 1px dashed #999; cursor: text; padding: 0 2px; }
+        .editable-char { border-bottom: 1px dashed #aaa; cursor: text; outline: none; }
+        
         .ping { color: var(--classic-blue) !important; } 
         .ze { color: var(--classic-red) !important; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>古韻詩詞標註</h1>
     <textarea id="poemInput" placeholder="請在此輸入詩句..."></textarea>
-    <div class="btn-group">
-        <button onclick="process()">開始轉換</button>
-        <button onclick="location.reload()">清除重置</button>
-    </div>
+    <button onclick="process()">開始轉換</button>
     <div id="output"></div>
 </div>
 
@@ -2482,6 +2479,7 @@ const dict = {
   "鶲": "ong1", "烏": "oo1", "槓": "kang1", "冲": "tshiong1", "啓": "ke2", "畓": "nam2", "睏": "khun3", "嘛": "ma5", "硅": "hirk4"
 
 };
+
 function process() {
     const input = document.getElementById('poemInput').value;
     const outputDiv = document.getElementById('output');
@@ -2496,47 +2494,44 @@ function process() {
             continue;
         }
 
-        let pinyin = dict[char] || "?";
         let ruby = document.createElement('ruby');
         
-        // 漢字 span
+        // 1. 漢字部分 (可編輯)
         let charSpan = document.createElement('span');
         charSpan.className = "editable-char";
         charSpan.contentEditable = true;
         charSpan.innerText = char;
-        // 綁定漢字修改事件
-        charSpan.oninput = function() { updatePinyin(this); };
+        // 修改漢字時，自動觸發連動更新
+        charSpan.oninput = function() { updateLinkedPinyin(this); };
         
-        // 音標 rt
+        // 2. 音標部分 (可編輯，具備顏色判斷)
         let rt = document.createElement('rt');
-        rt.className = getToneClass(pinyin);
         rt.contentEditable = true;
-        rt.innerText = pinyin;
+        rt.innerText = dict[char] || "?";
+        refreshColor(rt);
         rt.oninput = function() { refreshColor(this); };
         
-        ruby.appendChild(charSpan);
         ruby.appendChild(rt);
+        ruby.appendChild(charSpan);
         outputDiv.appendChild(ruby);
     }
 }
 
-function updatePinyin(span) {
+// 連動更新機制
+function updateLinkedPinyin(span) {
     let newChar = span.innerText.trim();
     let rt = span.nextElementSibling;
-    // 查找字典，找不到則顯示 ?
     rt.innerText = dict[newChar] || "?";
     refreshColor(rt);
 }
 
+// 平仄顏色重判機制
 function refreshColor(rt) {
     let pinyin = rt.innerText.trim();
-    rt.className = getToneClass(pinyin);
-}
-
-function getToneClass(pinyin) {
-    if (pinyin === "?") return "";
     let tone = pinyin.slice(-1);
-    return (tone === "1" || tone === "5") ? "ping" : "ze";
+    rt.classList.remove("ping", "ze");
+    if (tone === "1" || tone === "5") rt.classList.add("ping");
+    else if (pinyin !== "?") rt.classList.add("ze");
 }
 </script>
 </body>
