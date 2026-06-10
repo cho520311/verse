@@ -52,7 +52,6 @@
             border-top: 2px double var(--soft-gold); text-align: center;
         }
 
-        /* 關鍵：強制音標在上方，漢字在下方 */
         ruby { display: inline-flex; flex-direction: column-reverse; align-items: center; margin: 0 0.15em; vertical-align: top; }
         rt { font-size: 16px; font-family: Arial, sans-serif; font-weight: bold; cursor: text; line-height: 1.2; display: block; min-height: 1.2em; }
         .editable-char { border-bottom: 1px dashed #999; cursor: text; outline: none; display: block; line-height: 1.2; }
@@ -84,7 +83,6 @@
     
     <div class="btn-group">
         <button onclick="process()">開始轉換</button>
-        <button onclick="alert('功能開發中...')">下載文字txt版</button>
         <button onclick="window.print()">列印/PDF</button>
         <a href="#infoBox" class="btn-link">說明聯絡</a>
         <a href="https://tpps.org.tw/home.jsp?lang=tw" target="_blank" class="btn-link">臺灣瀛社詩學會</a>
@@ -2566,7 +2564,6 @@ function process() {
     for (let char of input) {
         if (char === '\n') { outputDiv.appendChild(document.createElement('br')); continue; }
         
-        // 標點符號處理
         if (/[，。？！；：、「」『』（）—…\s\d]/.test(char)) {
             let span = document.createElement('span');
             span.innerText = char;
@@ -2576,21 +2573,17 @@ function process() {
 
         let ruby = document.createElement('ruby');
         
-        // 漢字部分
         let charSpan = document.createElement('span');
         charSpan.className = "editable-char";
         charSpan.contentEditable = true;
         charSpan.innerText = char;
         
-        // 音標部分
         let rt = document.createElement('rt');
         rt.contentEditable = true;
         rt.innerText = dict[char] || "?";
         
-        // 關鍵：漢字修改連動音標
         charSpan.addEventListener('input', function() {
             let val = this.innerText.trim();
-            // 抓取同一個 ruby 內的 rt
             let targetRt = this.parentElement.querySelector('rt');
             if(val && dict[val]) {
                 targetRt.innerText = dict[val];
@@ -2600,14 +2593,13 @@ function process() {
             refreshColor(targetRt);
         });
 
-        // 音標修改更新顏色
         rt.addEventListener('input', function() {
             refreshColor(this);
         });
         
         refreshColor(rt);
-        ruby.appendChild(charSpan); // 先加字
-        ruby.appendChild(rt);       // 後加 rt，配合 column-reverse 會變在上方
+        ruby.appendChild(charSpan);
+        ruby.appendChild(rt);
         outputDiv.appendChild(ruby);
     }
 }
