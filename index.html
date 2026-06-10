@@ -16,10 +16,10 @@
         button, .btn-link { padding: 8px 16px; border: 1px solid var(--classic-red); background: white; color: var(--classic-red); cursor: pointer; text-decoration: none; font-family: inherit; font-weight: bold; }
         button:hover { background: var(--classic-red); color: white; }
         
-        #output { line-height: 4; font-size: 32px; text-align: center; border-top: 2px double var(--soft-gold); padding-top: 20px; }
+        #output { line-height: 4; font-size: 32px; text-align: center; border-top: 2px double var(--soft-gold); padding-top: 20px; margin-top: 20px; }
         ruby { display: inline-flex; flex-direction: column-reverse; align-items: center; margin: 0 0.15em; }
         rt { font-size: 16px; font-weight: bold; cursor: text; padding: 0 2px; }
-        .editable-char { border-bottom: 1px dotted #aaa; cursor: text; outline: none; }
+        .editable-char { border-bottom: 1px dashed #999; cursor: text; outline: none; display: inline-block; min-width: 1em; }
         .ping { color: var(--classic-blue) !important; } 
         .ze { color: var(--classic-red) !important; }
         
@@ -2516,7 +2516,7 @@ function process() {
 
     for (let char of input) {
         if (char === '\n') { outputDiv.appendChild(document.createElement('br')); continue; }
-        if (/[，。？！\s\d]/.test(char)) {
+        if (/[\s\d，。？！]/.test(char)) {
             let span = document.createElement('span');
             span.innerText = char;
             outputDiv.appendChild(span);
@@ -2524,23 +2524,31 @@ function process() {
         }
 
         let ruby = document.createElement('ruby');
+        
+        // 漢字：設定 contentEditable 讓使用者可以直接修改漢字
         let charSpan = document.createElement('span');
         charSpan.className = "editable-char";
         charSpan.contentEditable = true;
         charSpan.innerText = char;
         
+        // 音標
         let rt = document.createElement('rt');
         rt.contentEditable = true;
         rt.innerText = dict[char] || "?";
-        
-        // 漢字與音標聯動修正
-        charSpan.oninput = function() {
-            this.nextElementSibling.innerText = dict[this.innerText.trim()] || "?";
-            updateColor(this.nextElementSibling);
-        };
-        rt.oninput = function() { updateColor(this); };
-        
         updateColor(rt);
+        
+        // 漢字修改時，查表更新音標
+        charSpan.addEventListener('input', function() {
+            let newChar = this.innerText.trim();
+            this.nextElementSibling.innerText = dict[newChar] || "?";
+            updateColor(this.nextElementSibling);
+        });
+        
+        // 音標修改時，更新顏色
+        rt.addEventListener('input', function() {
+            updateColor(this);
+        });
+        
         ruby.appendChild(rt);
         ruby.appendChild(charSpan);
         outputDiv.appendChild(ruby);
@@ -2548,7 +2556,8 @@ function process() {
 }
 
 function updateColor(rt) {
-    let tone = rt.innerText.trim().slice(-1);
+    let pinyin = rt.innerText.trim();
+    let tone = pinyin.slice(-1);
     rt.className = (tone === "1" || tone === "5") ? "ping" : "ze";
 }
 </script>
