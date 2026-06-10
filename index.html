@@ -2,30 +2,52 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>古韻標註</title>
+    <title>古韻詩詞標註工具</title>
     <style>
-        /* 1. 書頁風格：完全模擬書本的乾淨感 */
-        body { background: #fdfaf2; font-family: "Kaiti TC", "標楷體", serif; padding: 50px; display: flex; justify-content: center; }
-        .container { max-width: 800px; width: 100%; background: #fff; padding: 40px; border: 1px solid #dcdcdc; }
-        textarea { width: 100%; height: 80px; font-size: 20px; border: 1px solid #ccc; margin-bottom: 20px; }
-        button { background: #555; color: white; border: none; padding: 10px 20px; cursor: pointer; }
+        body { background: #fdf5e6; font-family: "Kaiti TC", "標楷體", serif; display: flex; justify-content: center; padding: 20px; }
+        .container { max-width: 850px; width: 100%; background: #fff; padding: 30px; border: 1px solid #ddd; }
         
-        /* 2. 標註排版：這是實現 5(1), 5(2) 效果的關鍵 */
-        #output { display: flex; flex-wrap: wrap; line-height: 4.5; font-size: 36px; justify-content: center; margin-top: 30px; }
-        ruby { display: inline-flex; flex-direction: column-reverse; align-items: center; margin: 0 10px; }
-        rt { font-size: 16px; font-weight: bold; cursor: text; padding: 0 2px; }
+        /* 按鈕區 */
+        .btn-group { display: flex; gap: 10px; margin: 20px 0; justify-content: center; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; background: #fff; border: 1px solid #a93226; color: #a93226; }
+        button:hover { background: #a93226; color: #fff; }
         
-        /* 3. 編輯與顏色 */
-        .editable-char { border-bottom: 1px dotted #ccc; cursor: text; outline: none; }
-        .ping { color: #1a5276 !important; } /* 平聲：深藍 */
-        .ze { color: #a93226 !important; }   /* 仄聲：深紅 */
+        /* 標註區：垂直對齊 */
+        #output { line-height: 4; font-size: 32px; text-align: center; border-top: 2px solid #d4af37; padding-top: 20px; }
+        ruby { display: inline-flex; flex-direction: column-reverse; align-items: center; margin: 0 5px; }
+        rt { font-size: 16px; font-weight: bold; cursor: text; }
+        .editable-char { border-bottom: 1px dotted #aaa; outline: none; }
+        
+        /* 說明區 */
+        .info-section { margin-top: 40px; padding: 20px; border: 1px solid #d4af37; background: #fffdf9; line-height: 1.8; }
+        .ping { color: #2e59a7 !important; } .ze { color: #a93226 !important; }
     </style>
 </head>
 <body>
+
 <div class="container">
-    <textarea id="poemInput" placeholder="請在此輸入詩句..."></textarea>
-    <button onclick="process()">執行標註</button>
+    <div style="text-align:center;">
+        <h1>古韻詩詞標註</h1>
+        <p>瀛社 林正三老師 吳秀真老師 指導</p>
+    </div>
+    <textarea id="poemInput" style="width:100%; height:100px; font-size:18px;"></textarea>
+    
+    <div class="btn-group">
+        <button onclick="process()">開始轉換</button>
+        <button onclick="window.print()">列印/PDF</button>
+        <button onclick="location.reload()">重置</button>
+    </div>
+
     <div id="output"></div>
+
+    <div class="info-section">
+        <h3>謝謝您的蒞臨指教</h3>
+        <ul>
+            <li>區分中古音格局，反映閩南白讀音之古韻。</li>
+            <li>支、之、脂、微之層次辨識。</li>
+        </ul>
+        <p>交流聯絡：cho.yi.hsiang@gmail.com</p>
+    </div>
 </div>
 
 <script>
@@ -2483,13 +2505,7 @@ function process() {
 
     for (let char of input) {
         if (char === '\n') { outputDiv.appendChild(document.createElement('br')); continue; }
-        if (/[，。？！\s]/.test(char)) {
-            let span = document.createElement('span');
-            span.innerText = char;
-            outputDiv.appendChild(span);
-            continue;
-        }
-
+        
         let ruby = document.createElement('ruby');
         let charSpan = document.createElement('span');
         charSpan.className = "editable-char";
@@ -2500,7 +2516,7 @@ function process() {
         rt.contentEditable = true;
         rt.innerText = dict[char] || "?";
         
-        // 核心：修改漢字連動，並即時重判顏色
+        // 核心連動：改漢字 -> 更新音標 -> 判斷顏色
         charSpan.oninput = function() {
             rt.innerText = dict[this.innerText.trim()] || "?";
             updateColor(rt);
@@ -2517,9 +2533,7 @@ function process() {
 function updateColor(rt) {
     let pinyin = rt.innerText.trim();
     let tone = pinyin.slice(-1);
-    rt.classList.remove("ping", "ze");
-    if (tone === "1" || tone === "5") rt.classList.add("ping");
-    else if (pinyin !== "?") rt.classList.add("ze");
+    rt.className = (tone === "1" || tone === "5") ? "ping" : "ze";
 }
 </script>
 </body>
