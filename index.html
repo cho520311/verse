@@ -4,32 +4,27 @@
     <meta charset="UTF-8">
     <title>古韻標註</title>
     <style>
-        /* 1. 書本式風格：乾淨的背景，字體大而清晰 */
-        body { background: #fcfaf0; font-family: "Kaiti TC", "標楷體", serif; padding: 40px; display: flex; justify-content: center; }
-        .container { max-width: 900px; width: 100%; background: #fff; padding: 40px; border: 1px solid #dcdcdc; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        /* 1. 書頁風格：完全模擬書本的乾淨感 */
+        body { background: #fdfaf2; font-family: "Kaiti TC", "標楷體", serif; padding: 50px; display: flex; justify-content: center; }
+        .container { max-width: 800px; width: 100%; background: #fff; padding: 40px; border: 1px solid #dcdcdc; }
+        textarea { width: 100%; height: 80px; font-size: 20px; border: 1px solid #ccc; margin-bottom: 20px; }
+        button { background: #555; color: white; border: none; padding: 10px 20px; cursor: pointer; }
         
-        /* 2. 輸入區簡化 */
-        textarea { width: 100%; height: 60px; font-size: 20px; padding: 10px; border: 1px solid #ccc; margin-bottom: 20px; }
-        button { background: #8b4513; color: white; border: none; padding: 8px 20px; cursor: pointer; font-size: 16px; margin-bottom: 20px; }
-        
-        /* 3. 核心標註樣式：垂直對齊，字體放大 */
-        #output { display: flex; flex-wrap: wrap; line-height: 4; font-size: 36px; justify-content: center; color: #333; }
+        /* 2. 標註排版：這是實現 5(1), 5(2) 效果的關鍵 */
+        #output { display: flex; flex-wrap: wrap; line-height: 4.5; font-size: 36px; justify-content: center; margin-top: 30px; }
         ruby { display: inline-flex; flex-direction: column-reverse; align-items: center; margin: 0 10px; }
-        rt { font-size: 18px; font-weight: bold; cursor: text; padding: 0 2px; }
+        rt { font-size: 16px; font-weight: bold; cursor: text; padding: 0 2px; }
         
-        /* 4. 修改互動狀態 */
+        /* 3. 編輯與顏色 */
         .editable-char { border-bottom: 1px dotted #ccc; cursor: text; outline: none; }
-        .editable-char:focus { background: #fff9e6; border-bottom: 2px solid #8b4513; }
-        
-        /* 平仄顏色 */
-        .ping { color: #1a5276 !important; } 
-        .ze { color: #a93226 !important; }
+        .ping { color: #1a5276 !important; } /* 平聲：深藍 */
+        .ze { color: #a93226 !important; }   /* 仄聲：深紅 */
     </style>
 </head>
 <body>
 <div class="container">
-    <textarea id="poemInput" placeholder="請輸入詩句..."></textarea>
-    <button onclick="process()">開始標註</button>
+    <textarea id="poemInput" placeholder="請在此輸入詩句..."></textarea>
+    <button onclick="process()">執行標註</button>
     <div id="output"></div>
 </div>
 
@@ -2505,10 +2500,9 @@ function process() {
         rt.contentEditable = true;
         rt.innerText = dict[char] || "?";
         
-        // 綁定漢字修改連動
+        // 核心：修改漢字連動，並即時重判顏色
         charSpan.oninput = function() {
-            let newPinyin = dict[this.innerText.trim()] || "?";
-            rt.innerText = newPinyin;
+            rt.innerText = dict[this.innerText.trim()] || "?";
             updateColor(rt);
         };
         rt.oninput = function() { updateColor(this); };
@@ -2523,7 +2517,9 @@ function process() {
 function updateColor(rt) {
     let pinyin = rt.innerText.trim();
     let tone = pinyin.slice(-1);
-    rt.className = (tone === "1" || tone === "5") ? "ping" : "ze";
+    rt.classList.remove("ping", "ze");
+    if (tone === "1" || tone === "5") rt.classList.add("ping");
+    else if (pinyin !== "?") rt.classList.add("ze");
 }
 </script>
 </body>
