@@ -9,14 +9,13 @@
         .container { max-width: 850px; margin: auto; background: white; padding: 30px; border: 1px solid #ddd; }
         #output { line-height: 4; font-size: 32px; text-align: center; margin-top: 20px; }
         
-        /* 關鍵排版：確保 ruby 正確顯示 */
+        /* 關鍵：強制音標在上方，漢字在下方 */
         ruby { display: inline-flex; flex-direction: column-reverse; align-items: center; margin: 0 0.1em; }
-        rt { font-size: 16px; font-weight: bold; cursor: text; padding: 0 2px; }
-        .editable-char { border-bottom: 1px dashed #999; outline: none; cursor: text; }
+        rt { font-size: 16px; font-weight: bold; cursor: text; padding: 0 2px; order: -1; }
         
+        .editable-char { border-bottom: 1px dashed #999; outline: none; cursor: text; display: inline-block; min-width: 1em; }
         .ping { color: var(--classic-blue) !important; } 
         .ze { color: var(--classic-red) !important; }
-        .info-section { margin-top: 50px; padding: 20px; border: 1px solid #d4af37; background: #fffdf9; }
     </style>
 </head>
 <body>
@@ -26,11 +25,6 @@
     <textarea id="poemInput" style="width:100%; height:80px; font-size:18px;"></textarea>
     <button onclick="process()">開始轉換</button>
     <div id="output"></div>
-    
-    <div class="info-section">
-        <h3>說明</h3>
-        <p>點擊漢字即可修改，音標會自動連動更新。</p>
-    </div>
 </div>
 
 <script>
@@ -2503,21 +2497,21 @@ function process() {
         rt.contentEditable = true;
         rt.innerText = dict[char] || "?";
         
-        // 3. 綁定連動：漢字修改 -> 更新音標
+        // 3. 綁定連動
         charSpan.addEventListener('input', function() {
             let val = this.innerText.trim();
-            // 關鍵：明確指定更新這個 ruby 下面的 rt
+            // 尋找此漢字對應的音標
             let targetRt = this.parentElement.querySelector('rt');
             targetRt.innerText = dict[val] || "?";
             updateColor(targetRt);
         });
 
-        // 4. 音標修改 -> 更新顏色
+        // 4. 音標修改同步顏色
         rt.addEventListener('input', function() { updateColor(this); });
         
         updateColor(rt);
-        ruby.appendChild(charSpan); // 漢字在下
-        ruby.appendChild(rt);       // 音標在上
+        ruby.appendChild(charSpan); // 結構上加入漢字
+        ruby.appendChild(rt);       // 結構上加入音標
         outputDiv.appendChild(ruby);
     }
 }
