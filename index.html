@@ -2,33 +2,34 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>古韻詩詞標註工具 - 瀛社三七同系統</title>
+    <title>古韻標註</title>
     <style>
-        :root {
-            --paper-bg: #fdf5e6;
-            --ink-black: #2c3e50;
-            --classic-red: #a93226; 
-            --classic-blue: #2e59a7; 
-        }
-        body { background-color: var(--paper-bg); font-family: "Kaiti TC", "KaiTi", "標楷體", serif; padding: 20px; display: flex; justify-content: center; }
-        .container { max-width: 850px; width: 100%; background: rgba(255, 255, 255, 0.95); padding: 20px; border: 2px solid #ddd; }
-        textarea { width: 100%; height: 100px; font-size: 20px; margin-bottom: 10px; }
-        #output { line-height: 4; font-size: 32px; border-top: 2px solid #ccc; padding-top: 20px; text-align: center; }
+        /* 1. 書本式風格：乾淨的背景，字體大而清晰 */
+        body { background: #fcfaf0; font-family: "Kaiti TC", "標楷體", serif; padding: 40px; display: flex; justify-content: center; }
+        .container { max-width: 900px; width: 100%; background: #fff; padding: 40px; border: 1px solid #dcdcdc; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         
-        /* 核心樣式：確保 ruby 結構正確顯示 */
-        ruby { margin: 0 0.15em; display: inline-flex; flex-direction: column-reverse; align-items: center; }
+        /* 2. 輸入區簡化 */
+        textarea { width: 100%; height: 60px; font-size: 20px; padding: 10px; border: 1px solid #ccc; margin-bottom: 20px; }
+        button { background: #8b4513; color: white; border: none; padding: 8px 20px; cursor: pointer; font-size: 16px; margin-bottom: 20px; }
+        
+        /* 3. 核心標註樣式：垂直對齊，字體放大 */
+        #output { display: flex; flex-wrap: wrap; line-height: 4; font-size: 36px; justify-content: center; color: #333; }
+        ruby { display: inline-flex; flex-direction: column-reverse; align-items: center; margin: 0 10px; }
         rt { font-size: 18px; font-weight: bold; cursor: text; padding: 0 2px; }
-        .editable-char { border-bottom: 1px dashed #aaa; cursor: text; outline: none; }
         
-        .ping { color: var(--classic-blue) !important; } 
-        .ze { color: var(--classic-red) !important; }
+        /* 4. 修改互動狀態 */
+        .editable-char { border-bottom: 1px dotted #ccc; cursor: text; outline: none; }
+        .editable-char:focus { background: #fff9e6; border-bottom: 2px solid #8b4513; }
+        
+        /* 平仄顏色 */
+        .ping { color: #1a5276 !important; } 
+        .ze { color: #a93226 !important; }
     </style>
 </head>
 <body>
 <div class="container">
-    <textarea id="poemInput" placeholder="請在此輸入詩句..."></textarea>
-    <button onclick="process()">開始轉換</button>
+    <textarea id="poemInput" placeholder="請輸入詩句..."></textarea>
+    <button onclick="process()">開始標註</button>
     <div id="output"></div>
 </div>
 
@@ -2487,7 +2488,7 @@ function process() {
 
     for (let char of input) {
         if (char === '\n') { outputDiv.appendChild(document.createElement('br')); continue; }
-        if (/[\s\d，。？！]/.test(char)) {
+        if (/[，。？！\s]/.test(char)) {
             let span = document.createElement('span');
             span.innerText = char;
             outputDiv.appendChild(span);
@@ -2495,43 +2496,34 @@ function process() {
         }
 
         let ruby = document.createElement('ruby');
-        
-        // 1. 漢字部分 (可編輯)
         let charSpan = document.createElement('span');
         charSpan.className = "editable-char";
         charSpan.contentEditable = true;
         charSpan.innerText = char;
-        // 修改漢字時，自動觸發連動更新
-        charSpan.oninput = function() { updateLinkedPinyin(this); };
         
-        // 2. 音標部分 (可編輯，具備顏色判斷)
         let rt = document.createElement('rt');
         rt.contentEditable = true;
         rt.innerText = dict[char] || "?";
-        refreshColor(rt);
-        rt.oninput = function() { refreshColor(this); };
         
+        // 綁定漢字修改連動
+        charSpan.oninput = function() {
+            let newPinyin = dict[this.innerText.trim()] || "?";
+            rt.innerText = newPinyin;
+            updateColor(rt);
+        };
+        rt.oninput = function() { updateColor(this); };
+        
+        updateColor(rt);
         ruby.appendChild(rt);
         ruby.appendChild(charSpan);
         outputDiv.appendChild(ruby);
     }
 }
 
-// 連動更新機制
-function updateLinkedPinyin(span) {
-    let newChar = span.innerText.trim();
-    let rt = span.nextElementSibling;
-    rt.innerText = dict[newChar] || "?";
-    refreshColor(rt);
-}
-
-// 平仄顏色重判機制
-function refreshColor(rt) {
+function updateColor(rt) {
     let pinyin = rt.innerText.trim();
     let tone = pinyin.slice(-1);
-    rt.classList.remove("ping", "ze");
-    if (tone === "1" || tone === "5") rt.classList.add("ping");
-    else if (pinyin !== "?") rt.classList.add("ze");
+    rt.className = (tone === "1" || tone === "5") ? "ping" : "ze";
 }
 </script>
 </body>
