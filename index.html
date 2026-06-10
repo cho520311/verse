@@ -65,9 +65,11 @@
         rt:hover { background: #fff9c4; outline: 1px dashed orange; }
         rt:focus { background: #fff; outline: 2px solid orange; }
         
-        /* 平仄顏色定義 */
         .ping { color: var(--classic-blue) !important; } 
         .ze { color: var(--classic-red) !important; }
+        
+        /* 新增：讓可編輯區域更好看 */
+        .editable-char { border-bottom: 1px dotted #aaa; cursor: text; }
         
         @media print {
             textarea, .btn-group, .header-area h1, .info-section { display: none !important; }
@@ -1390,7 +1392,7 @@ const dict = {
   "辡": "pian2", "辡": "pian6", "辢": "lat8", "辣": "lat8", "遘": "kio3", "遙": "iau5", "遚": "tshiu3", "遛": "liu5", "遜": "sun3", "遝": "tap8", 
   "遝": "tap8", "遞": "te6", "遞": "te7", "遟": "ti5", "遟": "ti7", "遠": "uan2", "遠": "uan7", "遡": "soo3", "遢": "thap4", "遣": "khian2", 
   "遣": "khian3", "鄘": "iong5", "鄙": "pi2", "鄚": "mok8", "鄛": "tsau5", "鄜": "hu1", "鄝": "liau2", "鄞": "gin5", "鄞": "gin5", "鄟": "tuan5", 
-  "鄟": "tsuan1", "鄟": "suan6", "鄠": "hoo6", "鄡": "khiau1", "鄢": "ian1", "鄣": "tsiong1", "酲": "ting5", 
+  "鄟": "tsuan1", "鄟": "suan6", "鄠": "hoo6", "鄡": "khiau1", "鄢": "ian1", "鄢": "ian2", "鄢": "uan2", "鄢": "ian3", "鄣": "tsiong1", "酲": "ting5", 
   "酳": "in7", "酴": "too5", "酵": "kau3", "酷": "khok4", "酸": "suan1", "酹": "lue7", "酹": "lue7", "酹": "luat8", "酺": "poo5", "鈭": "tsir1", 
   "鈭": "tshir1", "鉵": "tong5", "鉶": "hing5", "鉷": "hong5", "鉸": "kau1", "鉸": "kau2", "鉸": "kau3", "鉹": "i5", "鉹": "tshi2", "鉻": "lok8", 
   "鉻": "kik4", "鉼": "ping2", "鉽": "sik4", "鉿": "kap4", "銀": "gin5", "銅": "tong5", "銆": "mik8", "銇": "lue7", "銉": "ut8", "銊": "sut4", 
@@ -2559,34 +2561,25 @@ const dict = {
   "鶲": "ong1", "烏": "oo1", "槓": "kang1", "冲": "tshiong1", "啓": "ke2", "畓": "nam2", "睏": "khun3", "嘛": "ma5", "硅": "hirk4"
 
 };
-
-// 核心轉換函數
 function process() {
     const input = document.getElementById('poemInput').value;
     const outputDiv = document.getElementById('output');
-    if (!input.trim()) {
-        alert("請輸入詩句再進行轉換。");
-        return;
-    }
+    if (!input.trim()) { alert("請輸入詩句再進行轉換。"); return; }
     
     let resultHTML = "";
     const punctuations = /[，。？！；：、「」『』（）—…\s\d]/;
     const hanChar = /[\u4E00-\u9FFF]/;
 
     for (let char of input) {
-        if (char === '\n') { 
-            resultHTML += '<br>';
-            continue; 
-        }
+        if (char === '\n') { resultHTML += '<br>'; continue; }
         if (!hanChar.test(char) || punctuations.test(char)) {
             resultHTML += `<span>${char}</span>`;
             continue;
         }
         let pinyin = dict[char] || "?";
-        let colorClass = updateColorByTone(pinyin); // 初始判斷顏色
+        let colorClass = updateColorByTone(pinyin); 
         
-        // 加上 oninput 事件，讓使用者編輯時即時觸發顏色更新
-        resultHTML += `<ruby>${char}<rt contenteditable="true" class="${colorClass}" oninput="refreshToneColor(this)">${pinyin}</rt></ruby>`;
+        resultHTML += `<ruby><span contenteditable="true" class="editable-char">${char}</span><rt contenteditable="true" class="${colorClass}" oninput="refreshToneColor(this)">${pinyin}</rt></ruby>`;
     }
     
     resultHTML += `
@@ -2597,39 +2590,22 @@ function process() {
     outputDiv.innerHTML = resultHTML;
 }
 
-// 根據拼音最後一位數字判斷顏色的輔助函數
 function updateColorByTone(pinyin) {
     if (pinyin === "?") return "";
     const tone = pinyin.trim().slice(-1);
     return (tone === "1" || tone === "5") ? "ping" : "ze";
 }
 
-// 當 rt 內容被修改時執行的函數
 function refreshToneColor(element) {
     const text = element.innerText.trim();
     const newColor = updateColorByTone(text);
-    
-    // 清除舊顏色，加入新顏色
     element.classList.remove("ping", "ze");
-    if (newColor) {
-        element.classList.add(newColor);
-    }
+    if (newColor) element.classList.add(newColor);
 }
 
 function handlePrint() {
-    const input = document.getElementById('poemInput').value.trim();
-    if (input) {
-        const firstLine = input.split('\n')[0];
-        const hanOnly = firstLine.replace(/[^\u4E00-\u9FFF]/g, '');
-        const fileName = hanOnly || "古韻詩詞";
-        document.title = fileName;
-    }
     window.print();
 }
 </script>
 </body>
 </html>
-
-
-
-
