@@ -24,9 +24,38 @@
         .ping { color: var(--classic-blue) !important; } 
         .ze { color: var(--classic-red) !important; }
         
+        /* 修正標點符號偏下方的問題 */
+        .punctuation {
+            border-bottom: none !important;
+            display: inline-block;
+            transform: translateY(-0.15em); 
+            line-height: 1.2 !important;
+        }
+        
         .info-section { margin-top: 50px; padding: 20px; border: 1px solid #d4af37; background: #fffdf9; line-height: 1.8; }
         .info-section h3 { color: var(--classic-red); }
         .info-link { color: var(--classic-blue); text-decoration: underline; }
+
+        /* =======================================================
+           【新增】列印/PDF 專用樣式隱藏設定
+           當使用者按下物理列印或另存 PDF 時，會自動隱藏紅色框框與輸入控制區
+           ======================================================= */
+        @media print {
+            /* 隱藏輸入框、按鈕群組以及底部的說明聯絡欄位（紅色框框） */
+            textarea, .btn-group, #infoBox {
+                display: none !important;
+            }
+            /* 移除外層容器的邊框與陰影，讓 PDF 像真正的紙張書卷 */
+            .container {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                background: transparent !important;
+            }
+            body {
+                background-color: white !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -2511,17 +2540,38 @@ const dict = {
   "鶲": "ong1", "烏": "oo1", "槓": "kang1", "冲": "tshiong1", "啓": "ke2", "畓": "nam2", "睏": "khun3", "嘛": "ma5", "硅": "hirk4"
 
 };
+
 function process() {
     const input = document.getElementById('poemInput').value;
     const outputDiv = document.getElementById('output');
-    outputDiv.innerHTML = "";
+    outputDiv.innerHTML = '';
 
     for (let char of input) {
-        if (char === '\n') { outputDiv.appendChild(document.createElement('br')); continue; }
-        if (/[，。？！\s\d]/.test(char)) {
-            let span = document.createElement('span');
-            span.innerText = char;
-            outputDiv.appendChild(span);
+        if (/\s/.test(char)) {
+            if (char === '\n') {
+                outputDiv.appendChild(document.createElement('br'));
+            } else {
+                let space = document.createElement('span');
+                space.style.display = "inline-block";
+                space.style.width = "1em";
+                outputDiv.appendChild(space);
+            }
+            continue;
+        }
+
+        if (/[，、。？！；：」「（）『』—…．,.\?!;:"'()\d]/.test(char)) {
+            let ruby = document.createElement('ruby');
+            
+            let charSpan = document.createElement('span');
+            charSpan.className = "editable-char punctuation";
+            charSpan.innerText = char;
+            
+            let rt = document.createElement('rt');
+            rt.innerText = ""; 
+            
+            ruby.appendChild(charSpan);
+            ruby.appendChild(rt);
+            outputDiv.appendChild(ruby);
             continue;
         }
 
@@ -2558,10 +2608,8 @@ function updateColor(rt) {
 function handlePrint() {
     const input = document.getElementById('poemInput').value.trim();
     if (input) {
-        const firstLine = input.split('\n')[0].substring(0, 10);
-        document.title = firstLine;
+        window.print();
     }
-    window.print();
 }
 </script>
 </body>
