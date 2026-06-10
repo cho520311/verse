@@ -68,8 +68,9 @@
         .ping { color: var(--classic-blue) !important; } 
         .ze { color: var(--classic-red) !important; }
         
-        /* 新增：讓可編輯區域更好看 */
-        .editable-char { border-bottom: 1px dotted #aaa; cursor: text; }
+        /* 漢字編輯樣式 */
+        .editable-char { border-bottom: 1px dotted #aaa; cursor: text; outline: none; }
+        .editable-char:focus { background: #eef; outline: 1px solid #99f; }
         
         @media print {
             textarea, .btn-group, .header-area h1, .info-section { display: none !important; }
@@ -107,8 +108,6 @@
         </ul>
         <hr style="border: 0; border-top: 1px solid #eee;">
         <p>
-            <strong>Podcast:</strong> <a href="https://twgo.io/sound" target="_blank" class="info-link">https://twgo.io/sound</a><br>
-            <strong>相關資料:</strong> <a href="https://twgo.io/hello" target="_blank" class="info-link">https://twgo.io/hello</a><br>
             <strong>交流聯絡信箱:</strong> <a href="mailto:cho.yi.hsiang@gmail.com" class="info-link">cho.yi.hsiang@gmail.com</a>
         </p>
     </div>
@@ -2561,6 +2560,7 @@ const dict = {
   "鶲": "ong1", "烏": "oo1", "槓": "kang1", "冲": "tshiong1", "啓": "ke2", "畓": "nam2", "睏": "khun3", "嘛": "ma5", "硅": "hirk4"
 
 };
+
 function process() {
     const input = document.getElementById('poemInput').value;
     const outputDiv = document.getElementById('output');
@@ -2579,23 +2579,34 @@ function process() {
         let pinyin = dict[char] || "?";
         let colorClass = updateColorByTone(pinyin); 
         
-        resultHTML += `<ruby><span contenteditable="true" class="editable-char">${char}</span><rt contenteditable="true" class="${colorClass}" oninput="refreshToneColor(this)">${pinyin}</rt></ruby>`;
+        // 漢字與拼音皆可修改，漢字修改會觸發 updatePinyin
+        resultHTML += `
+        <ruby>
+            <span contenteditable="true" class="editable-char" oninput="updatePinyin(this)">${char}</span>
+            <rt contenteditable="true" class="${colorClass}" oninput="refreshToneColor(this)">${pinyin}</rt>
+        </ruby>`;
     }
     
-    resultHTML += `
-    <div class="note-footer" style="color: blue; font-size: 20px; margin-top:15px;">
-        【上取聲母定清濁，下取韻母定四聲】<br>
-        聯絡：<a href="mailto:cho.yi.hsiang@gmail.com" style="color:#2e59a7; text-decoration:underline;">cho.yi.hsiang@gmail.com</a>
-    </div>`;
     outputDiv.innerHTML = resultHTML;
 }
 
+// 當修改漢字時，自動更新拼音並重新判斷顏色
+function updatePinyin(spanElement) {
+    const newChar = spanElement.innerText.trim();
+    const rtElement = spanElement.nextElementSibling;
+    const newPinyin = dict[newChar] || "?";
+    rtElement.innerText = newPinyin;
+    refreshToneColor(rtElement);
+}
+
+// 根據拼音最後一位數字判斷顏色的輔助函數
 function updateColorByTone(pinyin) {
     if (pinyin === "?") return "";
     const tone = pinyin.trim().slice(-1);
     return (tone === "1" || tone === "5") ? "ping" : "ze";
 }
 
+// 當修改音標時，更新顏色
 function refreshToneColor(element) {
     const text = element.innerText.trim();
     const newColor = updateColorByTone(text);
